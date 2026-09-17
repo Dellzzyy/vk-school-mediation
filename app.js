@@ -457,11 +457,9 @@ async function startConflictAnalysis() {
     if (loadingEl) loadingEl.classList.add('hidden');
     if (resultEl) resultEl.classList.remove('hidden');
     triggerHaptic('heavy');
-    const fallbackText = state.wizard.imageBase64
-      ? getOfflineScreenshotAdvice()
-      : getOfflineAnalysisClient(state.wizard.opponent, state.wizard.category, desc);
-    if (resultTextEl) resultTextEl.innerHTML = formatMarkdown(fallbackText);
+    if (resultTextEl) resultTextEl.innerHTML = '<div style="color:var(--text-muted);padding:10px 0;">⚠️ <strong>Не удалось получить ответ от нейросети.</strong><br><br>Пожалуйста, напишите свой вопрос или ситуацию напрямую в чат с ботом ВКонтакте.</div>';
   }
+
 }
 
 
@@ -525,15 +523,14 @@ async function sendChatMessage(customText = null) {
       appendChatMessage(data.reply, 'bot');
       renderSuggestions(data.suggestions || []);
     } else {
-      appendChatMessage('❌ Ошибка: ' + (data.error || 'не удалось получить ответ'), 'bot');
+      appendChatMessage(data.reply || ('⚠️ ' + (data.error || 'Не удалось получить ответ от нейросети.')), 'bot');
     }
   } catch (err) {
     if (typingBubble) typingBubble.remove();
     triggerHaptic('medium');
-    const fallback = getOfflineReplyClient(text);
-    appendChatMessage(fallback.reply, 'bot');
-    renderSuggestions(fallback.suggestions);
+    appendChatMessage('⚠️ Не удалось получить ответ от нейросети. Пожалуйста, напишите свой вопрос прямо в чат с ботом ВКонтакте.', 'bot');
   }
+
 }
 
 
