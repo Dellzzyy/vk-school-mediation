@@ -6,5 +6,7 @@
     "mvk": "index.html",
     "web": "index.html"
   },
+  "update_prod": true,
+  "update_dev": true,
   "noprompt": true
 }
