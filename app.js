@@ -249,6 +249,45 @@ function navigateTo(tabName) {
   if (mainContent) mainContent.scrollTop = 0;
 }
 
+// Запуск мастера с заранее выбранной темой из главного блока ситуаций
+function startWizardWithTopic(topic) {
+  triggerHaptic('medium');
+  navigateTo('wizard');
+  resetWizard();
+
+  setTimeout(() => {
+    if (topic === 'friend') {
+      const optCards = document.querySelectorAll('#wizardStep1 .option-card');
+      if (optCards[3]) selectWizardOption('opponent', 'Близкий друг / подруга', optCards[3]);
+      goToWizardStep(2);
+    } else if (topic === 'class') {
+      const optCards = document.querySelectorAll('#wizardStep1 .option-card');
+      if (optCards[0]) selectWizardOption('opponent', 'Одноклассник / сверстник', optCards[0]);
+      goToWizardStep(2);
+      const catPills = document.querySelectorAll('#wizardStep2 .cat-pill');
+      if (catPills[3]) selectWizardOption('category', 'Угрозы, бойкот или давление толпы', catPills[3]);
+    } else if (topic === 'rumors') {
+      const optCards = document.querySelectorAll('#wizardStep1 .option-card');
+      if (optCards[0]) selectWizardOption('opponent', 'Одноклассник / сверстник', optCards[0]);
+      goToWizardStep(2);
+      const catPills = document.querySelectorAll('#wizardStep2 .cat-pill');
+      if (catPills[2]) selectWizardOption('category', 'Нарушение личных границ и слухи', catPills[2]);
+      goToWizardStep(3);
+    } else if (topic === 'teachers') {
+      const optCards = document.querySelectorAll('#wizardStep1 .option-card');
+      if (optCards[1]) selectWizardOption('opponent', 'Учитель / преподаватель', optCards[1]);
+      goToWizardStep(2);
+    } else if (topic === 'bullying') {
+      const optCards = document.querySelectorAll('#wizardStep1 .option-card');
+      if (optCards[0]) selectWizardOption('opponent', 'Одноклассник / сверстник', optCards[0]);
+      goToWizardStep(2);
+      const catPills = document.querySelectorAll('#wizardStep2 .cat-pill');
+      if (catPills[0]) selectWizardOption('category', 'Травля / подколы в классе или чате', catPills[0]);
+      goToWizardStep(3);
+    }
+  }, 100);
+}
+
 // =====================================================================
 // 1. ДНЕВНИК НАСТРОЕНИЯ (MOOD CHECK-IN)
 // =====================================================================
