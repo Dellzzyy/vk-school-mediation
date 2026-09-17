@@ -1,0 +1,13 @@
+{
+  "name": "vk-school-mediation",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "./",
+  "scripts": {
+    "predeploy": "rm -rf dist && mkdir -p dist && cp index.html style.css app.js vk-bridge.js dist/",
+    "deploy": "vk-miniapps-deploy"
+  },
+  "devDependencies": {
+    "@vkontakte/vk-miniapps-deploy": "^1.0.2"
+  }
+}
