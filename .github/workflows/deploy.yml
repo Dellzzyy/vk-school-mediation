@@ -30,7 +30,7 @@ jobs:
           MINI_APPS_ACCESS_TOKEN: ${{ secrets.MINI_APPS_ACCESS_TOKEN }}
         run: |
           echo "=== 1. Check apps.get from VK API ==="
-          curl -s "https://api.vk.com/method/apps.get?app_id=54776741&platform=all&extended=1&v=5.131&access_token=${MINI_APPS_ACCESS_TOKEN}" || true
+          curl -s "https://api.vk.com/method/apps.get?app_id=54776741&platform=web&extended=1&v=5.131&access_token=${MINI_APPS_ACCESS_TOKEN}" || true
           echo ""
           echo "=== 2. Check curl prod URL ==="
           curl -sI -m 10 "https://prod-app54776741-2b9f63a792a4.pages-ac.vk-apps.ru/index.html" || true
