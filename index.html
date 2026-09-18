@@ -8,7 +8,7 @@
   <script src="./vk-bridge.js"></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1789724600">
+  <link rel="stylesheet" href="./style.css?v=1789725500">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -154,7 +154,7 @@
           </div>
 
           <!-- Нижний бирюзовый баннер -->
-          <div class="support-bottom-banner" onclick="navigateTo('wizard')">
+          <div class="support-bottom-banner" onclick="openHelpServicesModal()">
             <svg class="banner-rays rays-left" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
               <line x1="13" y1="4" x2="2" y2="8"/>
               <line x1="13" y1="13" x2="1" y2="13"/>
@@ -169,56 +169,15 @@
           </div>
         </div>
 
-        <!-- Quick Access Action Grid -->
-        <div class="quick-grid">
-          <div class="quick-tile" onclick="openScreenshotAnalyzer()">
-            <div class="tile-icon-wrap">
-              <img src="./images/icons/smartphone.png" class="tile-icon-img" alt="Разбор переписки">
-            </div>
-            <div class="tile-body">
-              <h3>РАЗБОР ПЕРЕПИСКИ</h3>
-              <p>Загрузи скриншот ссоры в чате — получи ответ</p>
-            </div>
+        <!-- Экспресс-разбор переписки по скриншоту -->
+        <div class="express-tool-card" onclick="openScreenshotAnalyzer()">
+          <img src="./images/icons/smartphone.png" class="express-icon-img" alt="Скриншот">
+          <div class="express-tool-info">
+            <span class="express-badge">ЭКСПРЕСС-ИНСТРУМЕНТ</span>
+            <div class="express-title">РАЗБОР ПЕРЕПИСКИ ПО СКРИНШОТУ</div>
+            <div class="express-desc">Загрузи фото спора — ИИ выделит манипуляции и подскажет ответ</div>
           </div>
-
-          <div class="quick-tile" onclick="navigateTo('chat')">
-            <div class="tile-icon-wrap">
-              <img src="./images/icons/sparkles.png" class="tile-icon-img" alt="ИИ-Медиатор">
-            </div>
-            <div class="tile-body">
-              <h3>ИИ-МЕДИАТОР ОНЛАЙН</h3>
-              <p>Анонимный диалог и разбор наедине</p>
-            </div>
-          </div>
-
-          <div class="quick-tile" onclick="navigateTo('kb')">
-            <div class="tile-icon-wrap">
-              <img src="./images/icons/shield_check.png" class="tile-icon-img" alt="Твои права">
-            </div>
-            <div class="tile-body">
-              <h3>ТВОИ ПРАВА В ШКОЛЕ</h3>
-              <p>Закон о телефонах, буллинге и границах</p>
-            </div>
-          </div>
-
-          <div class="quick-tile" onclick="navigateTo('sos')">
-            <div class="tile-icon-wrap">
-              <img src="./images/icons/siren.png" class="tile-icon-img" alt="SOS">
-            </div>
-            <div class="tile-body">
-              <h3>КРИЗИСНЫЙ SOS-ЦЕНТР</h3>
-              <p>Бесплатный детский телефон 8 (800) 200-01-22</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Official State & Trust Guarantee Card -->
-        <div class="trust-banner">
-          <img src="./images/icons/padlock.png" class="trust-icon-img" alt="Конфиденциальность">
-          <div class="trust-info">
-            <h4>100% КОНФИДЕНЦИАЛЬНОСТЬ (152-ФЗ РФ)</h4>
-            <p>Данные диалогов не передаются в школу, родителям или третьим лицам. Восстановительный подход без наказаний.</p>
-          </div>
+          <div class="express-arrow">→</div>
         </div>
       </section>
 
@@ -472,6 +431,73 @@
 
     </main>
 
+    <!-- Modal for Help & Services List (Всплывающее окно) -->
+    <div id="helpServicesModal" class="modal-backdrop hidden" onclick="closeHelpModal(event)">
+      <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-header">
+          <div class="modal-titles">
+            <span class="modal-tag">СЛУЖБА МЕДИАЦИИ 24/7</span>
+            <h3 class="modal-title">КАК МЫ МОЖЕМ ПОМОЧЬ?</h3>
+          </div>
+          <button class="btn-modal-close" onclick="closeHelpModal()">✕</button>
+        </div>
+        <p class="services-modal-intro">Выбери удобный формат разрешения ситуации:</p>
+
+        <div class="services-list">
+          <!-- 1. Пошаговый мастер -->
+          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('wizard')">
+            <img src="./images/icons/scales.png" class="service-icon-img" alt="Мастер">
+            <div class="service-info">
+              <div class="service-title">ПОШАГОВЫЙ МАСТЕР РАЗБОРА</div>
+              <div class="service-sub">3 простых вопроса — персональный план медиатора</div>
+            </div>
+            <span class="service-arrow">→</span>
+          </div>
+
+          <!-- 2. Разбор скриншота -->
+          <div class="service-row-card" onclick="closeHelpModal(); openScreenshotAnalyzer()">
+            <img src="./images/icons/smartphone.png" class="service-icon-img" alt="Скриншот">
+            <div class="service-info">
+              <div class="service-title">РАЗБОР ПЕРЕПИСКИ ПО СКРИНШОТУ</div>
+              <div class="service-sub">Загрузи фото спора — анализ манипуляций и ответ</div>
+            </div>
+            <span class="service-arrow">→</span>
+          </div>
+
+          <!-- 3. Диалог с ИИ -->
+          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('chat')">
+            <img src="./images/icons/sparkles.png" class="service-icon-img" alt="Чат">
+            <div class="service-info">
+              <div class="service-title">ДИАЛОГ С ИИ-МЕДИАТОРОМ</div>
+              <div class="service-sub">Конфиденциальная беседа наедине в онлайн-чате</div>
+            </div>
+            <span class="service-arrow">→</span>
+          </div>
+
+          <!-- 4. Права в школе -->
+          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('kb')">
+            <img src="./images/icons/shield_check.png" class="service-icon-img" alt="Права">
+            <div class="service-info">
+              <div class="service-title">ТВОИ ПРАВА В ШКОЛЕ</div>
+              <div class="service-sub">Законы РФ о телефонах, буллинге, оценках и границах</div>
+            </div>
+            <span class="service-arrow">→</span>
+          </div>
+
+          <!-- 5. Кризисный SOS -->
+          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('sos')">
+            <img src="./images/icons/siren.png" class="service-icon-img" alt="SOS">
+            <div class="service-info">
+              <div class="service-title">КРИЗИСНЫЙ SOS-ЦЕНТР</div>
+              <div class="service-sub">Бесплатный детский телефон 8 (800) 200-01-22</div>
+            </div>
+            <span class="service-arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal for Article Details -->
     <div id="articleModal" class="modal-backdrop hidden" onclick="closeArticleModal(event)">
       <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -523,6 +549,6 @@
     </nav>
   </div>
 
-  <script src="./app.js?v=1789724600"></script>
+  <script src="./app.js?v=1789725500"></script>
 </body>
 </html>

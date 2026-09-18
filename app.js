@@ -709,3 +709,22 @@ function closeArticleModal() {
   const modal = document.getElementById('articleModal');
   if (modal) modal.classList.add('hidden');
 }
+
+// =====================================================================
+// 5. МОДАЛЬНОЕ ОКНО СЕРВИСОВ И ВОЗМОЖНОСТЕЙ
+// =====================================================================
+function openHelpServicesModal() {
+  triggerHaptic('medium');
+  const modal = document.getElementById('helpServicesModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeHelpModal(e) {
+  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('btn-modal-close')) {
+    return;
+  }
+  triggerHaptic('light');
+  const modal = document.getElementById('helpServicesModal');
+  if (modal) modal.classList.add('hidden');
+}
+
