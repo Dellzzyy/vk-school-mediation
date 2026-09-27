@@ -281,6 +281,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Инициализируем тест
   renderPsychTest();
+
+  // Начальные подсказки в чате медиатора
+  renderSuggestions(["Ссора с другом", "Спор из-за оценки", "Обидные подколы в чате"]);
 });
 
 function triggerHaptic(type = 'light') {
@@ -738,23 +741,14 @@ function clearUnifiedAssistant() {
     container.innerHTML = `
       <div class="msg bot-msg">
         <div class="bubble">
-          👋 История очищена. Напиши, что случилось, или отправь слово <strong>«тест»</strong>, и я предложу три решения!
-          <div class="solutions-inline-options">
-            <button class="inline-solution-btn" onclick="setAssistantMode('test')">
-              🧠 <strong>Психологический тест</strong> (стиль поведения в споре)
-            </button>
-            <button class="inline-solution-btn" onclick="startMediatorChatPrompt()">
-              💬 <strong>Разобрать ситуацию как медиатор</strong>
-            </button>
-            <button class="inline-solution-btn" onclick="setAssistantMode('wizard')">
-              ⚖️ <strong>Мастер разрешения конфликтов</strong>
-            </button>
-          </div>
+          👋 <strong>Привет! Я твой школьный медиатор.</strong><br><br>
+          История очищена. Расскажи спокойно, что произошло или что тебя сейчас беспокоит?
         </div>
       </div>
     `;
   }
   if (sugContainer) sugContainer.innerHTML = '';
+  renderSuggestions(["Ссора с другом", "Спор из-за оценки", "Обидные подколы в чате"]);
   resetWizard();
   resetPsychTest();
 }

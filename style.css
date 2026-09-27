@@ -156,24 +156,18 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 .header-user {
   display: flex;
   align-items: center;
-  gap: 8px;
+  margin-left: auto;
 }
 
 .user-greeting {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.anon-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: rgba(11, 77, 80, 0.08);
   padding: 5px 12px;
-  background: var(--accent-primary);
-  color: #ffffff;
   border-radius: var(--radius-pill);
-  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.25);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .anon-icon-img {
