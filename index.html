@@ -8,7 +8,7 @@
   <script src="./vk-bridge.js"></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1789800000">
+  <link rel="stylesheet" href="./style.css?v=1789850000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -32,195 +32,7 @@
     <!-- Main Scrollable Content Area: ЕДИНАЯ ГЛАВНАЯ СТРАНИЦА -->
     <main class="main-content" id="mainContent">
 
-      <!-- ================= 1. КРИЗИСНЫЙ SOS НАЧАЛО СТРАНИЦЫ ================= -->
-      <section class="top-sos-section" id="topSosSection">
-        <div class="sos-card-top">
-          <div class="sos-top-header">
-            <div class="sos-top-badge">
-              <img src="./images/icons/siren.png" class="sos-badge-icon" alt="SOS">
-              <span>ЭКСТРЕННАЯ ПОМОЩЬ</span>
-            </div>
-            <span class="sos-top-anon">БЕСПЛАТНО • АНОНИМНО • 24/7</span>
-          </div>
-
-          <!-- Основная кнопка звонка -->
-          <a href="tel:88002000122" class="sos-main-call-btn" onclick="triggerHaptic('heavy')">
-            <div class="sos-phone-left">
-              <div class="sos-icon-glow">
-                <img src="./images/icons/siren.png" class="sos-phone-img" alt="Телефон">
-              </div>
-              <div class="sos-phone-texts">
-                <span class="sos-phone-number">8 (800) 200-01-22</span>
-                <span class="sos-phone-label">Единый детский телефон доверия РФ</span>
-              </div>
-            </div>
-            <div class="sos-call-action-pill">ПОЗВОНИТЬ</div>
-          </a>
-
-          <!-- Быстрые службы -->
-          <div class="sos-sub-services">
-            <a href="tel:112" class="sos-sub-pill" onclick="triggerHaptic('light')">
-              <span class="sub-pill-badge">112</span>
-              <span class="sub-pill-name">Служба спасения</span>
-            </a>
-            <a href="tel:+74959895050" class="sos-sub-pill" onclick="triggerHaptic('light')">
-              <span class="sub-pill-badge">МЧС</span>
-              <span class="sub-pill-name">Психологическая помощь</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= 2. БЛОК СИТУАЦИЙ «КОГДА ОБРАЩАТЬСЯ?» ================= -->
-      <section class="situations-showcase">
-        <!-- Заголовок с угловыми скобками -->
-        <div class="bracket-header-wrap">
-          <div class="bracket-header">
-            <div class="bracket-tl"></div>
-            <h2>КОГДА<br>ОБРАЩАТЬСЯ?</h2>
-            <div class="bracket-br"></div>
-          </div>
-        </div>
-
-        <!-- 5 Капсул с оригинальными иконками и лучиками -->
-        <div class="situation-capsules">
-          <!-- 1. Ссора с другом -->
-          <div class="situation-pill" onclick="startTopicResolution('friend')">
-            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="10" y1="3" x2="2" y2="6"/>
-              <line x1="10" y1="11" x2="1" y2="11"/>
-              <line x1="10" y1="19" x2="2" y2="16"/>
-            </svg>
-            <div class="capsule-box">
-              <img src="./images/icons/two_people.png" class="capsule-circle-img" alt="Ссора с другом">
-              <div class="capsule-texts">
-                <span class="capsule-main-text">ССОРА С ДРУГОМ</span>
-                <span class="capsule-sub-text">Обиды, недоверие и потеря контакта</span>
-              </div>
-            </div>
-            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="2" y1="3" x2="10" y2="6"/>
-              <line x1="2" y1="11" x2="11" y2="11"/>
-              <line x1="2" y1="19" x2="10" y2="16"/>
-            </svg>
-          </div>
-
-          <!-- 2. Конфликт в классе -->
-          <div class="situation-pill" onclick="startTopicResolution('class')">
-            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="10" y1="3" x2="2" y2="6"/>
-              <line x1="10" y1="11" x2="1" y2="11"/>
-              <line x1="10" y1="19" x2="2" y2="16"/>
-            </svg>
-            <div class="capsule-box">
-              <img src="./images/icons/conflict_angry.png" class="capsule-circle-img" alt="Конфликт в классе">
-              <div class="capsule-texts">
-                <span class="capsule-main-text">КОНФЛИКТ В КЛАССЕ</span>
-                <span class="capsule-sub-text">Споры, давление коллектива и бойкот</span>
-              </div>
-            </div>
-            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="2" y1="3" x2="10" y2="6"/>
-              <line x1="2" y1="11" x2="11" y2="11"/>
-              <line x1="2" y1="19" x2="10" y2="16"/>
-            </svg>
-          </div>
-
-          <!-- 3. Слухи и обиды -->
-          <div class="situation-pill" onclick="startTopicResolution('rumors')">
-            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="10" y1="3" x2="2" y2="6"/>
-              <line x1="10" y1="11" x2="1" y2="11"/>
-              <line x1="10" y1="19" x2="2" y2="16"/>
-            </svg>
-            <div class="capsule-box">
-              <img src="./images/icons/chat.png" class="capsule-circle-img" alt="Слухи и обиды">
-              <div class="capsule-texts">
-                <span class="capsule-main-text">СЛУХИ И ОБИДЫ</span>
-                <span class="capsule-sub-text">Сплетни, неприятные переписки в беседах</span>
-              </div>
-            </div>
-            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="2" y1="3" x2="10" y2="6"/>
-              <line x1="2" y1="11" x2="11" y2="11"/>
-              <line x1="2" y1="19" x2="10" y2="16"/>
-            </svg>
-          </div>
-
-          <!-- 4. Недопонимания -->
-          <div class="situation-pill" onclick="startTopicResolution('teachers')">
-            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="10" y1="3" x2="2" y2="6"/>
-              <line x1="10" y1="11" x2="1" y2="11"/>
-              <line x1="10" y1="19" x2="2" y2="16"/>
-            </svg>
-            <div class="capsule-box">
-              <img src="./images/icons/question.png" class="capsule-circle-img" alt="Недопонимания">
-              <div class="capsule-texts">
-                <span class="capsule-main-text">НЕДОПОНИМАНИЯ</span>
-                <span class="capsule-sub-text">Спорные ситуации с учителями и близкими</span>
-              </div>
-            </div>
-            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="2" y1="3" x2="10" y2="6"/>
-              <line x1="2" y1="11" x2="11" y2="11"/>
-              <line x1="2" y1="19" x2="10" y2="16"/>
-            </svg>
-          </div>
-
-          <!-- 5. Буллинг и кибербуллинг -->
-          <div class="situation-pill" onclick="startTopicResolution('bullying')">
-            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="10" y1="3" x2="2" y2="6"/>
-              <line x1="10" y1="11" x2="1" y2="11"/>
-              <line x1="10" y1="19" x2="2" y2="16"/>
-            </svg>
-            <div class="capsule-box">
-              <img src="./images/icons/smartphone.png" class="capsule-circle-img" alt="Буллинг и кибербуллинг">
-              <div class="capsule-texts">
-                <span class="capsule-main-text">БУЛЛИНГ И КИБЕРБУЛЛИНГ</span>
-                <span class="capsule-sub-text">Травля в школе или чатах, защита границ</span>
-              </div>
-            </div>
-            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <line x1="2" y1="3" x2="10" y2="6"/>
-              <line x1="2" y1="11" x2="11" y2="11"/>
-              <line x1="2" y1="19" x2="10" y2="16"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Нижний бирюзовый баннер -->
-        <div class="support-bottom-banner" onclick="scrollToAssistant()">
-          <svg class="banner-rays rays-left" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-            <line x1="13" y1="4" x2="2" y2="8"/>
-            <line x1="13" y1="13" x2="1" y2="13"/>
-            <line x1="13" y1="22" x2="2" y2="18"/>
-          </svg>
-          <div class="banner-pill">МЫ ВСЕГДА ПОМОЖЕМ ВАМ</div>
-          <svg class="banner-rays rays-right" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-            <line x1="2" y1="4" x2="13" y2="8"/>
-            <line x1="2" y1="13" x2="14" y2="13"/>
-            <line x1="2" y1="22" x2="13" y2="18"/>
-          </svg>
-        </div>
-      </section>
-
-      <!-- ================= 3. ЭКСПРЕСС-ИНСТРУМЕНТ: РАЗБОР СКРИНШОТА ================= -->
-      <section class="express-tool-section">
-        <div class="express-tool-card" onclick="openScreenshotAnalyzer()">
-          <img src="./images/icons/smartphone.png" class="express-icon-img" alt="Скриншот">
-          <div class="express-tool-info">
-            <span class="express-badge">ЭКСПРЕСС-ИНСТРУМЕНТ</span>
-            <div class="express-title">РАЗБОР ПЕРЕПИСКИ ПО СКРИНШОТУ</div>
-            <div class="express-desc">Загрузи фото спора — ИИ выделит манипуляции и подскажет ответ</div>
-          </div>
-          <div class="express-arrow">→</div>
-        </div>
-        <input type="file" id="globalScreenshotInput" accept="image/*" style="display:none" onchange="handleScreenshotUpload(this)">
-      </section>
-
-      <!-- ================= 4. ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ (ЧАТ + МАСТЕР + ТЕСТЫ) ================= -->
+      <!-- ================= 1. ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ (ЧАТ + МАСТЕР + ТЕСТЫ) ================= -->
       <section class="assistant-unified-section" id="assistantSection">
         <div class="assistant-header-card">
           <div class="assistant-title-row">
@@ -446,9 +258,31 @@
         </div>
       </section>
 
+      <!-- ================= 2. МЯГКИЙ НЕВЫРАЖЕННЫЙ SOS В НИЗУ СТРАНИЦЫ ================= -->
+      <footer class="bottom-sos-section" id="bottomSosSection">
+        <div class="sos-card-subtle">
+          <div class="sos-subtle-content">
+            <div class="sos-subtle-header">
+              <span class="sos-subtle-title">Экстренная психологическая помощь</span>
+              <span class="sos-subtle-tag">Бесплатно • Анонимно • 24/7</span>
+            </div>
+            <a href="tel:88002000122" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
+              <span class="phone-icon-mini">📞</span>
+              <span class="phone-number-text">8 (800) 200-01-22</span>
+              <span class="phone-desc-text">Детский телефон доверия</span>
+            </a>
+            <div class="sos-subtle-extra">
+              <span class="extra-service">Спасение: <a href="tel:112">112</a></span>
+              <span class="extra-dot">•</span>
+              <span class="extra-service">МЧС: <a href="tel:+74959895050">+7 (495) 989-50-50</a></span>
+            </div>
+          </div>
+        </div>
+      </footer>
+
     </main>
   </div>
 
-  <script src="./app.js?v=1789800000"></script>
+  <script src="./app.js?v=1789850000"></script>
 </body>
 </html>

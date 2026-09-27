@@ -1490,171 +1490,113 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   white-space: pre-wrap;
 }
 
-/* ================= 0. ТОП-БЛОК SOS (НАЧАЛО СТРАНИЦЫ) ================= */
-.top-sos-section {
-  margin-bottom: 20px;
+/* ================= МЯГКИЙ НЕВЫРАЖЕННЫЙ SOS В НИЗУ СТРАНИЦЫ ================= */
+.bottom-sos-section {
+  margin-top: 20px;
+  margin-bottom: 14px;
 }
 
-.sos-card-top {
-  position: relative;
-  background: #ffffff url('./images/card-bg.jpg') no-repeat center center / cover;
-  border: 1.5px solid rgba(225, 29, 72, 0.22);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.08);
-}
-
-.sos-top-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.sos-top-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(225, 29, 72, 0.08);
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  color: #c52243;
-}
-
-.sos-badge-icon {
-  width: 14px;
-  height: 14px;
-  object-fit: contain;
-}
-
-.sos-top-anon {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  color: #8c414c;
-}
-
-.sos-main-call-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, rgba(255, 245, 247, 0.95), rgba(254, 226, 232, 0.9));
-  border: 1.5px solid rgba(225, 29, 72, 0.25);
+.sos-card-subtle {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(11, 77, 80, 0.12);
   border-radius: var(--radius-md);
   padding: 12px 14px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.03);
 }
 
-.sos-main-call-btn:active {
-  transform: scale(0.98);
-}
-
-.sos-phone-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sos-icon-glow {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.15);
-}
-
-.sos-phone-img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.sos-phone-texts {
+.sos-subtle-content {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.sos-phone-number {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  color: #9f1239;
-  line-height: 1.2;
+.sos-subtle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
-.sos-phone-label {
+.sos-subtle-title {
   font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.sos-subtle-tag {
+  font-size: 10px;
   font-weight: 600;
-  color: #881337;
+  color: var(--text-muted);
   opacity: 0.85;
 }
 
-.sos-call-action-pill {
-  background: #e11d48;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 8px 14px;
-  border-radius: var(--radius-pill);
-  box-shadow: 0 3px 8px rgba(225, 29, 72, 0.3);
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-}
-
-.sos-sub-services {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.sos-sub-pill {
+.sos-subtle-phone-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(11, 77, 80, 0.12);
+  gap: 10px;
+  background: rgba(235, 248, 246, 0.75);
+  border: 1px solid rgba(11, 77, 80, 0.14);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  padding: 9px 12px;
   text-decoration: none;
-  color: var(--text-body);
+  color: inherit;
   transition: all 0.15s ease;
 }
 
-.sos-sub-pill:active {
-  background: #e6f6f4;
+.sos-subtle-phone-btn:active {
+  background: #e0f4f1;
 }
 
-.sub-pill-badge {
-  background: var(--accent-primary);
-  color: #ffffff;
-  font-size: 10px;
+.phone-icon-mini {
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.phone-number-text {
+  font-size: 15px;
   font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 6px;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
 }
 
-.sub-pill-name {
+.phone-desc-text {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.sos-subtle-extra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-top: 2px;
+}
+
+.sos-subtle-extra a {
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.sos-subtle-extra a:hover {
+  text-decoration: underline;
+}
+
+.extra-dot {
+  opacity: 0.4;
 }
 
 /* ================= ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ ================= */
 .assistant-unified-section {
-  margin-top: 14px;
-  margin-bottom: 24px;
+  margin-top: 2px;
+  margin-bottom: 20px;
 }
 
 .assistant-header-card {
