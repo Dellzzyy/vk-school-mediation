@@ -1,6 +1,6 @@
 /**
  * Mini App: «Цифровая служба школьной медиации» (VK Mini App & Telegram WebApp)
- * Клиентская логика приложения.
+ * Единая главная страница: Чат + Мастер конфликтов + Психологические тесты + SOS
  */
 
 const tg = window.Telegram?.WebApp;
@@ -8,9 +8,9 @@ const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes(
 
 // Состояние приложения
 const state = {
-  currentTab: 'home',
   userId: 0,
   userName: 'Ученик',
+  assistantMode: 'chat', // 'chat' | 'wizard' | 'test'
   wizard: {
     step: 1,
     opponent: 'Одноклассник / сверстник',
@@ -19,84 +19,169 @@ const state = {
     imageBase64: null,
     imageMime: 'image/jpeg'
   },
-  kbArticles: [],
+  psychTest: {
+    currentQ: 0,
+    answers: [],
+    completed: false
+  },
   chatHistory: []
 };
 
 // =====================================================================
-// ВСТРОЕННЫЕ КЛИЕНТСКИЕ ДАННЫЕ И МЕДИАТОР (РАБОТАЕТ БЕЗ СЕРВЕРА 24/7)
+// ДАННЫЕ ПСИХОЛОГИЧЕСКОГО ТЕСТА (Адаптация метода К. Томаса)
 // =====================================================================
-const FALLBACK_ARTICLES = [
-  {
-    id: "bullying_law",
-    tag: "Безопасность",
-    iconImg: "./images/icons/shield_check.png",
-    title: "Что считается буллингом по закону и какая ответственность?",
-    summary: "Травля — это не «шутки», а наказуемое правонарушение: оскорбления, клевета, шантаж и слив личных данных преследуются законом РФ.",
-    content: "**Ответственность за буллинг и кибербуллинг:**\n\n• **Оскорбление (ст. 5.61 КоАП РФ):** унижение чести и достоинства влечет административный штраф (до 16 лет штраф платят родители обидчика).\n• **Клевета (ст. 128.1 УК РФ):** распространение заведомо ложных сведений, порочащих честь.\n• **Нарушение неприкосновенности частной жизни (ст. 137 УК РФ):** публикация чужих фото, скринов переписок без согласия — уголовное преступление.\n• **Угрозы и вымогательство (ст. 119 и 163 УК РФ):** требования денег, еды или угрозы физической расправой.\n\n💡 **Что делать:** обязательно сохраняйте скриншоты, аудиозаписи и ссылки на сообщения обидчиков. Это юридические доказательства."
-  },
-  {
-    id: "nno_formula",
-    tag: "Медиация",
-    iconImg: "./images/icons/handshake.png",
-    title: "Формула ненасильственного общения (ННО): как осадить без мата",
-    summary: "Психологический метод Маршалла Розенберга, позволяющий остановить агрессию оппонента в 4 простых шага.",
-    content: "**4 шага формулы ННО:**\n\n1. **Констатация факта (без оценки и обвинений):** *«Когда ты громко обсуждаешь мой ответ у доски...»*\n2. **Озвучивание чувства:** *«...мне неприятно и это сбивает меня с мысли»*\n3. **Озвучивание потребности:** *«...потому что для меня важно спокойно сосредоточиться на уроке»*\n4. **Конкретная спокойная просьба:** *«...пожалуйста, не комментируй мои ответы»*.\n\n🔥 **Почему это работает:** вы не оскорбляете в ответ, поэтому оппоненту не за что зацепиться для продолжения скандала."
-  },
-  {
-    id: "parents_talk",
-    tag: "Семья",
-    iconImg: "./images/icons/family.png",
-    title: "Как рассказать родителям о сложной ситуации без криков",
-    summary: "Инструкция, как получить от родителей защиту и поддержку, а не упреки и разочарование.",
-    content: "**Пошаговый сценарий доверительного разговора:**\n\n1. **Выберите спокойный момент:** не начинайте разговор в спешке перед работой или когда родители только зашли уставшие домой.\n2. **Скажите волшебную фразу:** *«Мама / папа, мне сейчас очень нужна ваша помощь и совет как взрослых. Пожалуйста, просто выслушайте меня спокойно, без криков»*.\n3. **Расскажите факты:** без преувеличений и оправданий опишите, что произошло.\n4. **Обозначьте свои переживания:** *«Я сам(а) очень переживаю из-за этого и не знаю, как поступить правильно»*.\n5. **Попросите конкретной помощи:** *«Помогите мне поговорить с классным руководителем»* или *«Давайте вместе решим этот вопрос»*."
-  },
-  {
-    id: "school_mediation",
-    tag: "Служба примирения",
-    iconImg: "./images/icons/scales.png",
-    title: "Школьная служба медиации: как решить конфликт без наказания",
-    summary: "Во многих школах действует Служба примирения. Это добровольные переговоры с нейтральным медиатором без двоек за поведение.",
-    content: "**Что такое школьная медиация:**\n\n• **Нейтральность:** медиатор (психолог или обученный старшеклассник) не судит, не ищет виноватых и не ставит клеймо.\n• **Добровольность:** на медиацию нельзя принудить, обе стороны должны согласиться сесть за стол переговоров.\n• **Конфиденциальность:** все, что сказано на встрече, остается строго между участниками и не выносится на педсовет.\n• **Восстановительный результат:** цель — не наказать виновного, а загладить причиненный вред и договориться о правилах совместной жизни в классе."
+const PSYCH_TEST = {
+  title: "ТЕСТ: ТВОЙ СТИЛЬ В КОНФЛИКТАХ",
+  subtitle: "Методика К. Томаса в школьной адаптации",
+  questions: [
+    {
+      q: "1. Одноклассник публично отпустил обидную шутку в твой адрес. Твоя первая реакция?",
+      options: [
+        { text: "Осажу его еще жестче при всех, чтобы больше не лез и знал свое место", style: "compete", letter: "A" },
+        { text: "Спокойно предложу после урока поговорить наедине и прояснить шутку", style: "collab", letter: "B" },
+        { text: "Отшучусь в ответ или переведу в компромиссную тему без открытой ссоры", style: "compromise", letter: "C" },
+        { text: "Проигнорирую и отойду в сторону, сделав вид, что не заметил", style: "avoid", letter: "D" },
+        { text: "Промолчу и стерплю, лишь бы не портить отношения и не устраивать скандал", style: "accommodate", letter: "E" }
+      ]
+    },
+    {
+      q: "2. При подготовке командного проекта возник спор о том, кто какую часть делает:",
+      options: [
+        { text: "Настаиваю только на своем плане: я лучше знаю, как победить", style: "compete", letter: "A" },
+        { text: "Сядем и вместе распределим задачи с учетом сильных сторон каждого", style: "collab", letter: "B" },
+        { text: "Предложу разделить спорные обязанности поровну или по жребию", style: "compromise", letter: "C" },
+        { text: "Пусть делают как хотят, я выполню только свой минимум", style: "avoid", letter: "D" },
+        { text: "Соглашусь на любые чужие условия, чтобы не спорить в команде", style: "accommodate", letter: "E" }
+      ]
+    },
+    {
+      q: "3. Учитель поставил спорную оценку, с которой ты не согласен:",
+      options: [
+        { text: "Буду настойчиво спорить на уроке или сразу пойду жаловаться к руководству", style: "compete", letter: "A" },
+        { text: "После урока вежливо спрошу критерии и как доработать работу", style: "collab", letter: "B" },
+        { text: "Договорюсь о пересдаче или подготовке дополнительного доклада", style: "compromise", letter: "C" },
+        { text: "Махну рукой: спорить с учителем бесполезно и себе дороже", style: "avoid", letter: "D" },
+        { text: "Смирюсь молча, решив, что учитель всегда прав", style: "accommodate", letter: "E" }
+      ]
+    },
+    {
+      q: "4. Близкий друг случайно выдал твой секрет другим ребятам:",
+      options: [
+        { text: "Сразу прекращу общение и выскажу всё самое резкое прямо в лицо", style: "compete", letter: "A" },
+        { text: "Поговорю начистоту: объясню свои чувства и спрошу, почему он так поступил", style: "collab", letter: "B" },
+        { text: "Попрошу его публично опровергнуть слух, и тогда забудем инцидент", style: "compromise", letter: "C" },
+        { text: "Сделаю вид, что всё нормально, но перестану доверять и отдалюсь", style: "avoid", letter: "D" },
+        { text: "Прощу сразу, сделав вид, что мне совсем не обидно", style: "accommodate", letter: "E" }
+      ]
+    },
+    {
+      q: "5. В классном чате разгорается конфликт между одноклассниками:",
+      options: [
+        { text: "Вмешаюсь и жестко докажу правоту своей стороны", style: "compete", letter: "A" },
+        { text: "Предложу всем снизить градус и найти мирное решение спора", style: "collab", letter: "B" },
+        { text: "Предложу сойтись на нейтральном варианте, устраивающем большинство", style: "compromise", letter: "C" },
+        { text: "Выключу уведомления в чате или сразу выйду из него", style: "avoid", letter: "D" },
+        { text: "Поддержу большинство, даже если в душе не совсем согласен", style: "accommodate", letter: "E" }
+      ]
+    }
+  ],
+  results: {
+    collab: {
+      title: "СОТРУДНИЧЕСТВО (ПАРТНЕРСТВО)",
+      badge: "🤝 СТРАТЕГИЯ ЛИДЕРА И МЕДИАТОРА",
+      icon: "./images/icons/handshake.png",
+      desc: "Ты стремишься не просто «замять» ссору, а понять истинные мотивы второй стороны и найти решение, где выигрывают оба (Win-Win). Это самый зрелый и уважительный стиль общения в школе.",
+      strengths: "Высокий авторитет, умение слушать без обиды, способность сохранять дружбу при разногласиях.",
+      tips: "Помни, что сотрудничество требует времени. Если оппонент агрессивен и пока не готов к диалогу, сначала четко обозначь свои личные границы."
+    },
+    compromise: {
+      title: "КОМПРОМИСС (ЗОЛОТАЯ СЕРЕДИНА)",
+      badge: "⚖️ ДИПЛОМАТИЧЕСКИЙ БАЛАНС",
+      icon: "./images/icons/scales.png",
+      desc: "Ты мастер взаимных уступок. Ты быстро гасишь пламя конфликта, предлагая вариант «ни тебе, ни мне» или «пополам». С тобой легко договариваться.",
+      strengths: "Быстрое снятие напряжения, сохранение мира в классе, практичность.",
+      tips: "Следи, чтобы постоянные уступки не ущемляли твои базовые интересы. Иногда полезно глубже прояснить потребности сторон, переходя к сотрудничеству."
+    },
+    compete: {
+      title: "СОПЕРНИЧЕСТВО (НАСТОЙЧИВОСТЬ)",
+      badge: "🔥 СИЛЬНАЯ ВОЛЯ И ГРАНИЦЫ",
+      icon: "./images/icons/conflict_angry.png",
+      desc: "Ты уверенно защищаешь свои интересы и не даешь себя в обиду. У тебя есть внутренний стержень, смелость и лидерская решительность.",
+      strengths: "Умение постоять за себя, защита личных границ, решительность в стрессе.",
+      tips: "Постоянная борьба утомляет и может создавать лишних недоброжелателей. Попробуй проявлять эмпатию и слышать мотивы других ребят — это сделает тебя еще сильнее."
+    },
+    avoid: {
+      title: "ИЗБЕГАНИЕ (ДИСТАНЦИРОВАНИЕ)",
+      badge: "🛡️ СБЕРЕЖЕНИЕ СИЛ И ПАУЗА",
+      icon: "./images/icons/padlock.png",
+      desc: "Ты предпочитаешь не вступать в пустые перепалки и сохранять душевное спокойствие, держась в стороне от школьных интриг и сплетен.",
+      strengths: "Эмоциональная устойчивость, отсутствие бессмысленных драк и конфликтов на пустом месте.",
+      tips: "Избегание идеально при пустых провокациях. Но если нарушают твои права или есть угроза буллинга — не молчи, привлекай службу медиации или взрослых."
+    },
+    accommodate: {
+      title: "ПРИСПОСОБЛЕНИЕ (МИРОТВОРЕЦ)",
+      badge: "🕊️ ЗАБОТА ОБ ОТНОШЕНИЯХ",
+      icon: "./images/icons/two_people.png",
+      desc: "Для тебя важнее всего мир и добрые отношения с окружающими. Ты умеешь сопереживать, прощать и сглаживать любые острые углы.",
+      strengths: "Доброта, глубокая эмпатия, способность объединять людей.",
+      tips: "Твои чувства, желания и комфорт не менее важны, чем чужие! Учись говорить твердое спокойное «нет», когда нарушают твои личные границы."
+    }
   }
-];
+};
 
+// =====================================================================
+// КЛИЕНТСКИЙ ГЕНЕРАТОР ОТВЕТОВ МЕДИАТОРА (24/7 OFFLINE & ONLINE)
+// =====================================================================
 function getOfflineReplyClient(userMessage) {
-  const msg = userMessage.toLowerCase();
+  const msg = userMessage.toLowerCase().trim();
+
+  // Триггер на слово ТЕСТ
+  if (['тест', 'тесты', 'псих', 'пройти тест', 'психолог'].some(w => msg.includes(w))) {
+    return {
+      reply: "🎯 **Я могу предложить тебе 3 эффективных решения:**\n\n" +
+        "1. 🧠 **Психологический тест** — определи свой ведущий стиль поведения в школьных спорах по методу К. Томаса и узнай свои сильные стороны.\n" +
+        "2. 💬 **Разобрать ситуацию как медиатор** — разберем конкретный конфликт один на один, снимем эмоциональное напряжение и найдем нужные слова.\n" +
+        "3. ⚖️ **Мастер разрешения конфликтов** — пошаговый конструктор с получением готового дипломатического плана мирного выхода.\n\n" +
+        "Выбери, с чего начнем:",
+      isThreeSolutions: true,
+      suggestions: ["Психологический тест", "Разобрать как медиатор", "Мастер конфликтов"]
+    };
+  }
+
   if (['привет', 'здравствуй', 'ку', 'хай', 'добрый'].some(w => msg.includes(w))) {
     return {
-      reply: "👋 Привет! Я цифровая служба школьной медиации. Помогаю мирно и конфиденциально разрешать любые ссоры, споры и недопонимания в классе или с учителями. Расскажи, что произошло?",
-      suggestions: ["Конфликт с одноклассником", "Спор с учителем", "Сложности дома"]
+      reply: "👋 Привет! Я цифровая служба школьной медиации. Помогаю мирно и конфиденциально разрешать любые ссоры, споры и недопонимания в классе или с учителями. Расскажи, что произошло? Или напиши **«тест»**, чтобы узнать свой стиль поведения в конфликтах!",
+      suggestions: ["Начать тест", "Конфликт с одноклассником", "Спор с учителем"]
     };
   } else if (['бьют', 'драка', 'ударил', 'угрож', 'вымогат', 'деньги'].some(w => msg.includes(w))) {
     return {
       reply: "⚠️ Это серьезная ситуация, касающаяся твоей безопасности! Не оставайся один на один с агрессором. Срочно обратись к дежурному учителю, социальному педагогу или позвони на Единый детский телефон доверия: **8 (800) 200-01-22** (бесплатно, анонимно).",
-      suggestions: ["Позвонить на горячую линию", "Как поговорить с родителями?", "Помощь медиатора"]
+      suggestions: ["Позвонить на горячую линию", "Как поговорить с родителями?", "План мастера"]
     };
   } else if (['дразн', 'обзыва', 'буллинг', 'травл', 'подкол', 'слухи', 'сплетн'].some(w => msg.includes(w))) {
     return {
-      reply: "🛡️ Травля и обидные подколы — это попытка нарушить твои границы. Главное правило: не показывай бурных эмоций (обидчики ждут слез или крика). Отвечай твердо и спокойно: *«Мне это неинтересно»* или *«Зачем ты это говоришь?»*. Фиксируй скриншоты.",
-      suggestions: ["Разобрать ситуацию в мастере", "Закон о буллинге", "Что написать в ответ?"]
+      reply: "🛡️ Травля и обидные подколы — это попытка нарушить твои границы. Главное правило: не показывай бурных эмоций (обидчики ждут слез или крика). Отвечай твердо и спокойно: *«Мне это неинтересно»* или *«Зачем ты это говоришь?»*. Фиксируй скриншоты переписки.",
+      suggestions: ["Мастер конфликтов", "Что написать в ответ?", "Пройти тест"]
     };
   } else if (['учител', 'оценк', 'пара', 'двойк', 'занижа', 'предметник'].some(w => msg.includes(w))) {
     return {
-      reply: "📚 В спорах с учителями закон на твоей стороне при вежливом диалоге. Главное: обсуждай работу, а не личность учителя. Скажи: *«Подскажите, пожалуйста, в каких именно критериях я ошибся(лась)? Что нужно доработать, чтобы исправить оценку?»*. Учитель обязан разъяснить критерии согласно ФЗ «Об образовании в РФ».",
-      suggestions: ["Как оспорить оценку?", "Поговорить с классным руководителем", "Права ученика"]
+      reply: "📚 В спорах с учителями закон на твоей стороне при вежливом диалоге. Главное: обсуждай работу, а не личность учителя. Скажи: *«Подскажите, пожалуйста, в каких именно критериях я ошибся(лась)? Что нужно доработать, чтобы исправить оценку?»*. Учитель обязан разъяснить критерии.",
+      suggestions: ["Как оспорить оценку?", "Поговорить с классным руководителем", "Мастер конфликтов"]
     };
   } else if (['родител', 'мама', 'папа', 'руга', 'дома', 'телефон отбира'].some(w => msg.includes(w))) {
     return {
       reply: "👨‍👩‍👧 Разногласия с родителями часто вызваны их тревогой за твоё будущее, хотя проявляться это может через давление или контроль. Попробуй метод «Я-сообщений»: *«Когда вы повышаете голос, мне трудно вас услышать. Я хочу спокойно обсудить учебу»*.",
-      suggestions: ["Инструкция: разговор с родителями", "Как снизить контроль?", "Сделать паузу"]
+      suggestions: ["Разговор с родителями", "Сделать паузу", "Пройти тест"]
     };
   } else if (['стресс', 'экзамен', 'огэ', 'егэ', 'устал', 'выгоран', 'тревог'].some(w => msg.includes(w))) {
     return {
       reply: "🧘 Тревога перед экзаменами и нагрузками — нормальная реакция организма. Помни: твоя ценность не измеряется баллами в дневнике. Раздели подготовку на короткие отрезки по 25 минут и обязательно давай себе отдых без гаджетов. Ты справишься!",
-      suggestions: ["Дневник настроения", "Дыхательная техника", "Чек-лист перед уроком"]
+      suggestions: ["Психологический тест", "Дыхательная техника", "Разобрать как медиатор"]
     };
   } else {
     return {
-      reply: "Я внимательно тебя слушаю. В восстановительной медиации мы всегда разбираем 3 главных вопроса:\n\n1. 📌 **Что конкретно произошло?** (факты без эмоций)\n2. 💭 **Что ты почувствовал(а) в этот момент?**\n3. 🤝 **Какое решение ситуации было бы справедливым для тебя?**\n\nНапиши подробности или воспользуйся вкладкой «Разбор ситуации» на главном экране!",
-      suggestions: ["Разобрать ситуацию в Мастере", "Твои права в школе", "Кризисная помощь"]
+      reply: "Я внимательно тебя слушаю. В восстановительной медиации мы всегда разбираем 3 главных вопроса:\n\n1. 📌 **Что конкретно произошло?** (факты без эмоций)\n2. 💭 **Что ты почувствовал(а) в этот момент?**\n3. 🤝 **Какое решение ситуации было бы справедливым для тебя?**\n\nНапиши подробности или выбери **«Мастер конфликтов»** в переключателе выше для пошагового разбора!",
+      suggestions: ["Мастер конфликтов", "Психологический тест", "Как справиться со стрессом?"]
     };
   }
 }
@@ -129,21 +214,20 @@ function getOfflineScreenshotAdvice() {
     `2. ⏸️ **Правило паузы:** если тебя провоцируют в чате — ни в коем случае не отвечай сразу на эмоциях. Главная цель обидчика — заставить тебя оправдываться или сорваться на оскорбления на глазах у других.\n` +
     `3. 💬 **Рекомендуемый ответ в чат:**\n` +
     `*«Обсуждать личные вопросы в общем чате я не планирую. Если хочешь конструктивного диалога — пиши лично или обсудим ситуацию со школьным медиатором»*.\n` +
-    `4. ⚖️ **Правовая защита:** публичные оскорбления и травля в сетевых беседах подпадают под ст. 5.61 КоАП РФ. Сохраняй скриншоты — они являются доказательством при необходимости привлечения классного руководителя или администрации.`
+    `4. ⚖️ **Защита границ:** публичные оскорбления и травля в сетевых беседах подпадают под ст. 5.61 КоАП РФ. Сохраняй скриншоты — они являются доказательством при необходимости привлечения классного руководителя или администрации.`
   );
 }
 
 // =====================================================================
-// ИНИЦИАЛИЗАЦИЯ VK MINI APP И TELEGRAM WEBAPP
+// ИНИЦИАЛИЗАЦИЯ
 // =====================================================================
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Инициализация VK Mini App
+  // 1. VK Bridge init
   if (typeof vkBridge !== 'undefined') {
     try {
       await vkBridge.send('VKWebAppInit');
       console.log('✅ VK Bridge успешно инициализирован');
 
-      // Подписка на события VK темы
       vkBridge.subscribe((e) => {
         if (e.detail.type === 'VKWebAppUpdateConfig') {
           const scheme = e.detail.data.scheme;
@@ -155,7 +239,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
 
-      // Получаем информацию о пользователе VK
       const user = await vkBridge.send('VKWebAppGetUserInfo');
       if (user && user.id) {
         state.userId = user.id;
@@ -170,14 +253,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Извлечение user_id из VK URL параметров (?vk_user_id=...)
   const urlParams = new URLSearchParams(window.location.search);
   const vkUserId = urlParams.get('vk_user_id');
   if (vkUserId && !state.userId) {
     state.userId = parseInt(vkUserId, 10);
   }
 
-  // 2. Инициализация Telegram WebApp
+  // 2. Telegram WebApp init
   if (tg) {
     try {
       tg.ready();
@@ -197,8 +279,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (e) {}
   }
 
-  // Загружаем статьи базы знаний
-  loadKnowledgeBase();
+  // Инициализируем тест
+  renderPsychTest();
 });
 
 function triggerHaptic(type = 'light') {
@@ -211,40 +293,51 @@ function triggerHaptic(type = 'light') {
   } catch (e) {}
 }
 
-// =====================================================================
-// НАВИГАЦИЯ ПО ВКЛАДКАМ
-// =====================================================================
-function navigateTo(tabName) {
+function scrollToAssistant() {
   triggerHaptic('light');
-  state.currentTab = tabName;
-
-  // Скрываем все экраны
-  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-
-  // Активируем нужный экран
-  const targetScreen = document.getElementById(`screen-${tabName}`);
-  if (targetScreen) {
-    targetScreen.classList.add('active');
+  const el = document.getElementById('assistantSection');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
   }
-
-  // Обновляем состояние таббара
-  document.querySelectorAll('.tab-item').forEach(el => {
-    if (el.dataset.target === tabName) {
-      el.classList.add('active');
-    } else {
-      el.classList.remove('active');
-    }
-  });
-
-  // Прокручиваем наверх
-  const mainContent = document.getElementById('mainContent');
-  if (mainContent) mainContent.scrollTop = 0;
 }
 
-// Запуск мастера с заранее выбранной темой из главного блока ситуаций
-function startWizardWithTopic(topic) {
+// =====================================================================
+// ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ В ОБЪЕДИНЕННОМ ЦЕНТРЕ МЕДИАЦИИ
+// =====================================================================
+function setAssistantMode(mode) {
   triggerHaptic('medium');
-  navigateTo('wizard');
+  state.assistantMode = mode;
+
+  // Кнопки табов
+  const btnChat = document.getElementById('tabBtnChat');
+  const btnWizard = document.getElementById('tabBtnWizard');
+  const btnTest = document.getElementById('tabBtnTest');
+
+  if (btnChat) btnChat.classList.toggle('active', mode === 'chat');
+  if (btnWizard) btnWizard.classList.toggle('active', mode === 'wizard');
+  if (btnTest) btnTest.classList.toggle('active', mode === 'test');
+
+  // Панели
+  const panelChat = document.getElementById('assistantModeChat');
+  const panelWizard = document.getElementById('assistantModeWizard');
+  const panelTest = document.getElementById('assistantModeTest');
+
+  if (panelChat) panelChat.classList.toggle('hidden', mode !== 'chat');
+  if (panelWizard) panelWizard.classList.toggle('hidden', mode !== 'wizard');
+  if (panelTest) panelTest.classList.toggle('hidden', mode !== 'test');
+
+  if (mode === 'test' && !state.psychTest.completed) {
+    renderPsychTest();
+  }
+
+  // Скроллим к ассистенту
+  scrollToAssistant();
+}
+
+// Запуск разбора по теме из капсул «КОГДА ОБРАЩАТЬСЯ?»
+function startTopicResolution(topic) {
+  triggerHaptic('medium');
+  setAssistantMode('wizard');
   resetWizard();
 
   setTimeout(() => {
@@ -280,104 +373,14 @@ function startWizardWithTopic(topic) {
   }, 100);
 }
 
-// =====================================================================
-// 1. ДНЕВНИК НАСТРОЕНИЯ (MOOD CHECK-IN)
-// =====================================================================
-async function submitMood(score, label) {
-  triggerHaptic('medium');
-
-  document.querySelectorAll('.mood-btn').forEach((btn, idx) => {
-    if (idx + 1 === score) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
-
-  const feedbackEl = document.getElementById('moodFeedback');
-  if (feedbackEl) {
-    feedbackEl.textContent = 'Сохраняем...';
-    feedbackEl.classList.remove('hidden');
-  }
-
-  try {
-    const res = await fetch('/api/mood', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: state.userId,
-        score: score,
-        label: label
-      })
-    });
-    const data = await res.json();
-    if (data.ok && feedbackEl) {
-      feedbackEl.textContent = `✨ ${data.affirmation}`;
-    }
-  } catch (err) {
-    const quotes = {
-      1: "Понимаю, день непростой. Главное — помнить, что любые сложные эмоции проходят. Сделай паузу и вдох-выдох.",
-      2: "Тревога и грусть забирают силы. Давай разберем, что именно тебя тревожит, и наметим простой план.",
-      3: "Хорошее нейтральное состояние — отличная база, чтобы спокойно и рассудительно решать любые задачи.",
-      4: "Отличный эмоциональный заряд! Используй эту уверенность для добрых дел и продуктивного общения.",
-      5: "Супер! Твоя уверенность и энергия помогут легко найти общий язык с кем угодно."
-    };
-    if (feedbackEl) feedbackEl.textContent = `✨ ${quotes[score] || quotes[3]}`;
-  }
-}
-
-
-// Быстрый запуск разбора скриншота
+// Запуск экспресс-разбора по скриншоту
 function openScreenshotAnalyzer() {
-  navigateTo('wizard');
-  goToWizardStep(3);
-  setTimeout(() => {
-    const fileInput = document.getElementById('wizardFileInput');
-    if (fileInput) fileInput.click();
-  }, 200);
-}
-
-// =====================================================================
-// 2. МАСТЕР РАЗРЕШЕНИЯ КОНФЛИКТА (WIZARD)
-// =====================================================================
-function selectWizardOption(field, value, btnEl) {
   triggerHaptic('light');
-  state.wizard[field] = value;
-
-  const parent = btnEl.parentElement;
-  parent.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-  btnEl.classList.add('active');
+  const fileInput = document.getElementById('globalScreenshotInput');
+  if (fileInput) fileInput.click();
 }
 
-function goToWizardStep(stepNum) {
-  triggerHaptic('light');
-  state.wizard.step = stepNum;
-
-  // Обновляем индикаторы шагов
-  for (let i = 1; i <= 4; i++) {
-    const dot = document.getElementById(`stepDot${i}`);
-    const line = document.getElementById(`stepLine${i}`);
-    if (dot) {
-      if (i <= stepNum) dot.classList.add('active');
-      else dot.classList.remove('active');
-    }
-    if (line) {
-      if (i < stepNum) line.classList.add('active');
-      else line.classList.remove('active');
-    }
-  }
-
-  // Показываем содержимое шага
-  for (let i = 1; i <= 4; i++) {
-    const content = document.getElementById(`wizardStep${i}`);
-    if (content) {
-      if (i === stepNum) content.classList.add('active');
-      else content.classList.remove('active');
-    }
-  }
-
-  const mainContent = document.getElementById('mainContent');
-  if (mainContent) mainContent.scrollTop = 0;
-}
-
-function handleWizardFile(input) {
+function handleScreenshotUpload(input) {
   if (!input.files || !input.files[0]) return;
   const file = input.files[0];
   state.wizard.imageMime = file.type || 'image/jpeg';
@@ -385,6 +388,9 @@ function handleWizardFile(input) {
   const reader = new FileReader();
   reader.onload = (e) => {
     state.wizard.imageBase64 = e.target.result;
+    setAssistantMode('wizard');
+    goToWizardStep(3);
+
     const previewWrap = document.getElementById('wizardImgPreviewWrap');
     const previewImg = document.getElementById('wizardImgPreview');
     const uploadText = document.getElementById('wizardUploadText');
@@ -396,130 +402,196 @@ function handleWizardFile(input) {
     if (uploadText) {
       uploadText.textContent = `Выбран файл: ${file.name}`;
     }
-    triggerHaptic('medium');
+    scrollToAssistant();
   };
   reader.readAsDataURL(file);
 }
 
-function removeWizardImg(event) {
-  event.stopPropagation();
-  state.wizard.imageBase64 = null;
-  const previewWrap = document.getElementById('wizardImgPreviewWrap');
-  const uploadText = document.getElementById('wizardUploadText');
-  const fileInput = document.getElementById('wizardFileInput');
+// =====================================================================
+// МОДУЛЬ ПСИХОЛОГИЧЕСКОГО ТЕСТА
+// =====================================================================
+function renderPsychTest() {
+  const container = document.getElementById('psychTestContainer');
+  if (!container) return;
 
-  if (previewWrap) previewWrap.classList.add('hidden');
-  if (uploadText) uploadText.textContent = 'Прикрепить скриншот переписки (по желанию)';
-  if (fileInput) fileInput.value = '';
-  triggerHaptic('light');
-}
-
-function formatMarkdown(text) {
-  if (!text) return '';
-  return text
-    .replace(/^### (.*$)/gim, '<h4 style="margin: 12px 0 6px; color: var(--text-primary); font-size: 15px; font-weight: 700;">$1</h4>')
-    .replace(/^## (.*$)/gim, '<h3 style="margin: 14px 0 8px; color: var(--text-primary); font-size: 16px; font-weight: 700;">$1</h3>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/^• (.*$)/gim, '<div style="margin: 3px 0; padding-left: 10px;">• $1</div>')
-    .replace(/\n\n/g, '<div style="height: 8px;"></div>')
-    .replace(/\n/g, '<br>');
-}
-
-async function startConflictAnalysis() {
-  const descEl = document.getElementById('wizardDesc');
-  const desc = descEl ? descEl.value.trim() : '';
-
-  if (!desc && !state.wizard.imageBase64) {
-    alert('Пожалуйста, напиши пару слов о том, что произошло, или прикрепи скриншот.');
+  if (state.psychTest.completed) {
+    renderPsychResult();
     return;
   }
 
-  state.wizard.description = desc;
-  goToWizardStep(4);
+  const qIndex = state.psychTest.currentQ;
+  const question = PSYCH_TEST.questions[qIndex];
+  const total = PSYCH_TEST.questions.length;
+  const progressPercent = Math.round(((qIndex) / total) * 100);
 
-  const loadingEl = document.getElementById('wizardLoading');
-  const resultEl = document.getElementById('wizardResult');
-  const resultTextEl = document.getElementById('wizardResultText');
+  let optionsHtml = '';
+  question.options.forEach((opt) => {
+    optionsHtml += `
+      <button class="test-opt-btn" onclick="answerPsychQuestion('${opt.style}')">
+        <span class="test-opt-letter">${opt.letter}</span>
+        <span class="test-opt-text">${opt.text}</span>
+      </button>
+    `;
+  });
 
-  if (loadingEl) loadingEl.classList.remove('hidden');
-  if (resultEl) resultEl.classList.add('hidden');
+  container.innerHTML = `
+    <div class="test-header-wrap">
+      <div class="test-badge-row">
+        <span class="test-main-badge">${PSYCH_TEST.title}</span>
+        <span class="test-q-counter">Вопрос ${qIndex + 1} из ${total}</span>
+      </div>
+      <div class="test-progress-bar-bg">
+        <div class="test-progress-bar-fill" style="width: ${progressPercent}%"></div>
+      </div>
+    </div>
 
-  try {
-    let response;
-    // Если прикреплен скриншот, вызываем мультимодальный анализ
-    if (state.wizard.imageBase64) {
-      response = await fetch('/api/analyze-screenshot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: state.userId,
-          image_base64: state.wizard.imageBase64,
-          mime_type: state.wizard.imageMime,
-          caption: `Спор с [${state.wizard.opponent}], категория: [${state.wizard.category}]. ${desc}`
-        })
-      });
-    } else {
-      // Иначе структурированный текстовый разбор
-      response = await fetch('/api/analyze-conflict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: state.userId,
-          opponent: state.wizard.opponent,
-          category: state.wizard.category,
-          description: desc
-        })
-      });
-    }
+    <div class="test-question-box">
+      <div class="test-question-title">${question.q}</div>
+    </div>
 
-    const data = await response.json();
-    if (loadingEl) loadingEl.classList.add('hidden');
-    if (resultEl) resultEl.classList.remove('hidden');
-
-    if (data.ok) {
-      triggerHaptic('heavy');
-      const formatted = formatMarkdown(data.analysis || data.reply || '');
-      if (resultTextEl) resultTextEl.innerHTML = formatted;
-    } else {
-      if (resultTextEl) resultTextEl.textContent = '❌ Не удалось разобрать ситуацию: ' + (data.error || 'ошибка сервера');
-    }
-  } catch (err) {
-    if (loadingEl) loadingEl.classList.add('hidden');
-    if (resultEl) resultEl.classList.remove('hidden');
-    triggerHaptic('heavy');
-    if (resultTextEl) resultTextEl.innerHTML = '<div style="color:var(--text-muted);padding:10px 0;">⚠️ <strong>Не удалось получить ответ от нейросети.</strong><br><br>Пожалуйста, напишите свой вопрос или ситуацию напрямую в чат с ботом ВКонтакте.</div>';
-  }
-
+    <div class="test-options-list">
+      ${optionsHtml}
+    </div>
+  `;
 }
 
+function answerPsychQuestion(style) {
+  triggerHaptic('medium');
+  state.psychTest.answers.push(style);
 
+  if (state.psychTest.currentQ + 1 < PSYCH_TEST.questions.length) {
+    state.psychTest.currentQ += 1;
+    renderPsychTest();
+  } else {
+    state.psychTest.completed = true;
+    renderPsychResult();
+  }
+}
 
-function resetWizard() {
+function renderPsychResult() {
+  const container = document.getElementById('psychTestContainer');
+  if (!container) return;
+
+  // Считаем стиль большинства
+  const counts = { compete: 0, collab: 0, compromise: 0, avoid: 0, accommodate: 0 };
+  state.psychTest.answers.forEach(st => {
+    if (counts[st] !== undefined) counts[st]++;
+  });
+
+  let maxStyle = 'collab';
+  let maxCount = -1;
+  for (const [st, count] of Object.entries(counts)) {
+    if (count > maxCount) {
+      maxCount = count;
+      maxStyle = st;
+    }
+  }
+
+  const resultData = PSYCH_TEST.results[maxStyle] || PSYCH_TEST.results.collab;
+
+  container.innerHTML = `
+    <div class="test-result-card">
+      <div class="test-result-icon-wrap">
+        <img src="${resultData.icon}" class="test-result-icon" alt="">
+      </div>
+      <span class="test-result-badge">${resultData.badge}</span>
+      <h3 class="test-result-title">${resultData.title}</h3>
+
+      <div class="test-result-desc">
+        ${resultData.desc}
+      </div>
+
+      <div class="test-result-extra">
+        <div class="test-extra-item">
+          <strong>💪 Твоя сильная сторона:</strong> ${resultData.strengths}
+        </div>
+        <div class="test-extra-item">
+          <strong>💡 Совет школьного медиатора:</strong> ${resultData.tips}
+        </div>
+      </div>
+
+      <div class="test-result-actions">
+        <button class="btn-primary" onclick="startMediatorChatPrompt('У меня по тесту стиль «${resultData.title}». Как мне разрешить ситуацию?')">
+          РАЗОБРАТЬ СИТУАЦИЮ С МЕДИАТОРОМ
+        </button>
+        <button class="btn-secondary" onclick="resetPsychTest()">
+          🔄 ПРОЙТИ ТЕСТ ЗАНОВО
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function resetPsychTest() {
   triggerHaptic('light');
-  state.wizard.description = '';
-  state.wizard.imageBase64 = null;
-  const descEl = document.getElementById('wizardDesc');
-  if (descEl) descEl.value = '';
-  removeWizardImg({ stopPropagation: () => {} });
-  goToWizardStep(1);
-}
-
-function transferWizardToChat() {
-  navigateTo('chat');
-  const chatInput = document.getElementById('chatInput');
-  if (chatInput) {
-    chatInput.value = 'Подскажи, что сказать в первую очередь?';
-    chatInput.focus();
-  }
+  state.psychTest.currentQ = 0;
+  state.psychTest.answers = [];
+  state.psychTest.completed = false;
+  renderPsychTest();
 }
 
 // =====================================================================
-// 3. ИИ-МЕДИАТОР ОНЛАЙН (CHAT)
+// ИИ-МЕДИАТОР ОНЛАЙН (CHAT)
 // =====================================================================
 function handleChatKeyPress(event) {
   if (event.key === 'Enter') {
     sendChatMessage();
+  }
+}
+
+function triggerChatPhotoUpload() {
+  triggerHaptic('light');
+  const input = document.getElementById('chatFileInput');
+  if (input) input.click();
+}
+
+function handleChatFileUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const mimeType = file.type || 'image/jpeg';
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Data = e.target.result;
+    appendChatMessage(`📸 *[Прикреплен скриншот: ${file.name}]*`, 'user');
+    const typingBubble = appendTypingIndicator();
+
+    try {
+      const res = await fetch('/api/analyze-screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: state.userId,
+          image_base64: base64Data,
+          mime_type: mimeType,
+          caption: 'Разбери этот скриншот переписки как медиатор'
+        })
+      });
+      const data = await res.json();
+      if (typingBubble) typingBubble.remove();
+      if (data.ok) {
+        appendChatMessage(data.reply, 'bot');
+      } else {
+        appendChatMessage(getOfflineScreenshotAdvice(), 'bot');
+      }
+    } catch (err) {
+      if (typingBubble) typingBubble.remove();
+      appendChatMessage(getOfflineScreenshotAdvice(), 'bot');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function startMediatorChatPrompt(customText = null) {
+  setAssistantMode('chat');
+  const input = document.getElementById('chatInput');
+  if (customText) {
+    sendChatMessage(customText);
+  } else {
+    if (input) {
+      input.value = 'Помоги мне мирно разобрать спор: ';
+      input.focus();
+    }
   }
 }
 
@@ -533,7 +605,6 @@ async function sendChatMessage(customText = null) {
   triggerHaptic('light');
   appendChatMessage(text, 'user');
 
-  // Показываем индикатор печати
   const typingBubble = appendTypingIndicator();
 
   try {
@@ -551,19 +622,66 @@ async function sendChatMessage(customText = null) {
 
     if (data.ok) {
       triggerHaptic('medium');
-      appendChatMessage(data.reply, 'bot');
-      renderSuggestions(data.suggestions || []);
+      if (['тест', 'тесты', 'псих'].some(w => text.toLowerCase().includes(w))) {
+        appendThreeSolutionsMessage();
+      } else {
+        appendChatMessage(data.reply, 'bot');
+        renderSuggestions(data.suggestions || []);
+      }
     } else {
-      appendChatMessage(data.reply || ('⚠️ ' + (data.error || 'Не удалось получить ответ от нейросети.')), 'bot');
+      const fallback = getOfflineReplyClient(text);
+      if (fallback.isThreeSolutions) {
+        appendThreeSolutionsMessage();
+      } else {
+        appendChatMessage(fallback.reply, 'bot');
+        renderSuggestions(fallback.suggestions);
+      }
     }
   } catch (err) {
     if (typingBubble) typingBubble.remove();
     triggerHaptic('medium');
-    appendChatMessage('⚠️ Не удалось получить ответ от нейросети. Пожалуйста, напишите свой вопрос прямо в чат с ботом ВКонтакте.', 'bot');
+    const fallback = getOfflineReplyClient(text);
+    if (fallback.isThreeSolutions) {
+      appendThreeSolutionsMessage();
+    } else {
+      appendChatMessage(fallback.reply, 'bot');
+      renderSuggestions(fallback.suggestions);
+    }
   }
-
 }
 
+function appendThreeSolutionsMessage() {
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'msg bot-msg';
+
+  msgDiv.innerHTML = `
+    <div class="bubble">
+      🎯 <strong>Я могу предложить тебе 3 эффективных решения:</strong><br><br>
+      1. 🧠 <strong>Психологический тест</strong> — определи свой ведущий стиль поведения в школьных конфликтах по методу К. Томаса.<br>
+      2. 💬 <strong>Разобрать ситуацию как медиатор</strong> — разберем конфликт один на один, снимем напряжение и найдем нужные слова.<br>
+      3. ⚖️ <strong>Мастер разрешения конфликтов</strong> — пошаговый конструктор с получением готового дипломатического плана.<br><br>
+      <em>Выбери подходящий вариант:</em>
+      <div class="solutions-inline-options">
+        <button class="inline-solution-btn" onclick="setAssistantMode('test')">
+          🧠 <strong>Психологический тест</strong> (стиль поведения)
+        </button>
+        <button class="inline-solution-btn" onclick="startMediatorChatPrompt()">
+          💬 <strong>Разобрать ситуацию как медиатор</strong>
+        </button>
+        <button class="inline-solution-btn" onclick="setAssistantMode('wizard')">
+          ⚖️ <strong>Мастер разрешения конфликтов</strong>
+        </button>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(msgDiv);
+  container.scrollTop = container.scrollHeight;
+  renderSuggestions(["Психологический тест", "Разобрать как медиатор", "Мастер конфликтов"]);
+}
 
 function appendChatMessage(text, sender) {
   const container = document.getElementById('chatMessages');
@@ -574,12 +692,10 @@ function appendChatMessage(text, sender) {
 
   const bubbleDiv = document.createElement('div');
   bubbleDiv.className = 'bubble';
-
   bubbleDiv.innerHTML = formatMarkdown(text);
+
   msgDiv.appendChild(bubbleDiv);
   container.appendChild(msgDiv);
-
-  // Автоскролл
   container.scrollTop = container.scrollHeight;
 }
 
@@ -614,7 +730,7 @@ function renderSuggestions(suggestions) {
   });
 }
 
-function clearWebChat() {
+function clearUnifiedAssistant() {
   triggerHaptic('medium');
   const container = document.getElementById('chatMessages');
   const sugContainer = document.getElementById('chatSuggestions');
@@ -622,101 +738,186 @@ function clearWebChat() {
     container.innerHTML = `
       <div class="msg bot-msg">
         <div class="bubble">
-          История очищена. Я готов выслушать новую ситуацию и помочь найти мирный выход!
+          👋 История очищена. Напиши, что случилось, или отправь слово <strong>«тест»</strong>, и я предложу три решения!
+          <div class="solutions-inline-options">
+            <button class="inline-solution-btn" onclick="setAssistantMode('test')">
+              🧠 <strong>Психологический тест</strong> (стиль поведения в споре)
+            </button>
+            <button class="inline-solution-btn" onclick="startMediatorChatPrompt()">
+              💬 <strong>Разобрать ситуацию как медиатор</strong>
+            </button>
+            <button class="inline-solution-btn" onclick="setAssistantMode('wizard')">
+              ⚖️ <strong>Мастер разрешения конфликтов</strong>
+            </button>
+          </div>
         </div>
       </div>
     `;
   }
   if (sugContainer) sugContainer.innerHTML = '';
+  resetWizard();
+  resetPsychTest();
 }
 
 // =====================================================================
-// 4. БАЗА ЗНАНИЙ (KNOWLEDGE BASE)
+// МАСТЕР РАЗРЕШЕНИЯ КОНФЛИКТА (WIZARD)
 // =====================================================================
-async function loadKnowledgeBase() {
-  try {
-    const res = await fetch('/api/kb');
-    const data = await res.json();
-    if (data.ok && data.articles) {
-      state.kbArticles = data.articles;
-      renderKnowledgeBase(data.articles);
-    }
-  } catch (err) {
-    state.kbArticles = FALLBACK_ARTICLES;
-    renderKnowledgeBase(FALLBACK_ARTICLES);
-  }
-}
-
-
-function renderKnowledgeBase(articles) {
-  const container = document.getElementById('kbList');
-  if (!container) return;
-
-  container.innerHTML = '';
-  articles.forEach(art => {
-    const card = document.createElement('div');
-    card.className = 'kb-card';
-    card.onclick = () => openArticleModal(art);
-
-    const iconSrc = art.iconImg || './images/icons/books.png';
-
-    card.innerHTML = `
-      <div class="kb-card-header">
-        <img src="${iconSrc}" class="kb-icon-img" alt="${art.tag}">
-        <span class="kb-card-tag">${art.tag}</span>
-      </div>
-      <h3 class="kb-card-title">${art.title}</h3>
-      <p class="kb-card-summary">${art.summary}</p>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function openArticleModal(article) {
-  triggerHaptic('medium');
-  const modal = document.getElementById('articleModal');
-  const iconEl = document.getElementById('modalArticleIcon');
-  const tagEl = document.getElementById('modalArticleTag');
-  const titleEl = document.getElementById('modalArticleTitle');
-  const contentEl = document.getElementById('modalArticleContent');
-
-  if (iconEl) {
-    const iconSrc = article.iconImg || './images/icons/books.png';
-    iconEl.innerHTML = `<img src="${iconSrc}" class="modal-header-icon-img" alt="">`;
-  }
-  if (tagEl) tagEl.textContent = article.tag;
-  if (titleEl) titleEl.textContent = article.title;
-  if (contentEl) {
-    contentEl.innerHTML = article.content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n/g, '<br>');
-  }
-
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closeArticleModal() {
+function selectWizardOption(field, value, btnEl) {
   triggerHaptic('light');
-  const modal = document.getElementById('articleModal');
-  if (modal) modal.classList.add('hidden');
+  state.wizard[field] = value;
+
+  const parent = btnEl.parentElement;
+  parent.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+  btnEl.classList.add('active');
 }
 
-// =====================================================================
-// 5. МОДАЛЬНОЕ ОКНО СЕРВИСОВ И ВОЗМОЖНОСТЕЙ
-// =====================================================================
-function openHelpServicesModal() {
-  triggerHaptic('medium');
-  const modal = document.getElementById('helpServicesModal');
-  if (modal) modal.classList.remove('hidden');
+function goToWizardStep(stepNum) {
+  triggerHaptic('light');
+  state.wizard.step = stepNum;
+
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById(`stepDot${i}`);
+    const line = document.getElementById(`stepLine${i}`);
+    if (dot) dot.classList.toggle('active', i <= stepNum);
+    if (line) line.classList.toggle('active', i < stepNum);
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    const content = document.getElementById(`wizardStep${i}`);
+    if (content) content.classList.toggle('active', i === stepNum);
+  }
+
+  scrollToAssistant();
 }
 
-function closeHelpModal(e) {
-  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('btn-modal-close')) {
+function handleWizardFile(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  state.wizard.imageMime = file.type || 'image/jpeg';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.wizard.imageBase64 = e.target.result;
+    const previewWrap = document.getElementById('wizardImgPreviewWrap');
+    const previewImg = document.getElementById('wizardImgPreview');
+    const uploadText = document.getElementById('wizardUploadText');
+
+    if (previewImg && previewWrap) {
+      previewImg.src = e.target.result;
+      previewWrap.classList.remove('hidden');
+    }
+    if (uploadText) uploadText.textContent = `Выбран файл: ${file.name}`;
+    triggerHaptic('medium');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeWizardImg(event) {
+  if (event && event.stopPropagation) event.stopPropagation();
+  state.wizard.imageBase64 = null;
+  const previewWrap = document.getElementById('wizardImgPreviewWrap');
+  const uploadText = document.getElementById('wizardUploadText');
+  const fileInput = document.getElementById('wizardFileInput');
+
+  if (previewWrap) previewWrap.classList.add('hidden');
+  if (uploadText) uploadText.textContent = 'Прикрепить скриншот переписки (по желанию)';
+  if (fileInput) fileInput.value = '';
+  triggerHaptic('light');
+}
+
+function formatMarkdown(text) {
+  if (!text) return '';
+  return text
+    .replace(/^### (.*$)/gim, '<h4 style="margin: 12px 0 6px; color: var(--text-primary); font-size: 14.5px; font-weight: 700;">$1</h4>')
+    .replace(/^## (.*$)/gim, '<h3 style="margin: 14px 0 8px; color: var(--text-primary); font-size: 15.5px; font-weight: 700;">$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/^• (.*$)/gim, '<div style="margin: 3px 0; padding-left: 10px;">• $1</div>')
+    .replace(/\n\n/g, '<div style="height: 8px;"></div>')
+    .replace(/\n/g, '<br>');
+}
+
+async function startConflictAnalysis() {
+  const descEl = document.getElementById('wizardDesc');
+  const desc = descEl ? descEl.value.trim() : '';
+
+  if (!desc && !state.wizard.imageBase64) {
+    alert('Пожалуйста, напиши пару слов о том, что произошло, или прикрепи скриншот.');
     return;
   }
-  triggerHaptic('light');
-  const modal = document.getElementById('helpServicesModal');
-  if (modal) modal.classList.add('hidden');
+
+  state.wizard.description = desc;
+  goToWizardStep(4);
+
+  const loadingEl = document.getElementById('wizardLoading');
+  const resultEl = document.getElementById('wizardResult');
+  const resultTextEl = document.getElementById('wizardResultText');
+
+  if (loadingEl) loadingEl.classList.remove('hidden');
+  if (resultEl) resultEl.classList.add('hidden');
+
+  try {
+    let response;
+    if (state.wizard.imageBase64) {
+      response = await fetch('/api/analyze-screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: state.userId,
+          image_base64: state.wizard.imageBase64,
+          mime_type: state.wizard.imageMime,
+          caption: `Спор с [${state.wizard.opponent}], категория: [${state.wizard.category}]. ${desc}`
+        })
+      });
+    } else {
+      response = await fetch('/api/analyze-conflict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: state.userId,
+          opponent: state.wizard.opponent,
+          category: state.wizard.category,
+          description: desc
+        })
+      });
+    }
+
+    const data = await response.json();
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (resultEl) resultEl.classList.remove('hidden');
+
+    if (data.ok) {
+      triggerHaptic('heavy');
+      const formatted = formatMarkdown(data.analysis || data.reply || '');
+      if (resultTextEl) resultTextEl.innerHTML = formatted;
+    } else {
+      const fallbackAdvice = getOfflineAnalysisClient(state.wizard.opponent, state.wizard.category, desc);
+      if (resultTextEl) resultTextEl.innerHTML = formatMarkdown(fallbackAdvice);
+    }
+  } catch (err) {
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (resultEl) resultEl.classList.remove('hidden');
+    triggerHaptic('heavy');
+    const fallbackAdvice = getOfflineAnalysisClient(state.wizard.opponent, state.wizard.category, desc);
+    if (resultTextEl) resultTextEl.innerHTML = formatMarkdown(fallbackAdvice);
+  }
 }
 
+function resetWizard() {
+  triggerHaptic('light');
+  state.wizard.description = '';
+  state.wizard.imageBase64 = null;
+  const descEl = document.getElementById('wizardDesc');
+  if (descEl) descEl.value = '';
+  removeWizardImg();
+  goToWizardStep(1);
+}
+
+function transferWizardToChat() {
+  setAssistantMode('chat');
+  const chatInput = document.getElementById('chatInput');
+  if (chatInput) {
+    chatInput.value = 'Подскажи, с каких именно слов лучше начать разговор?';
+    chatInput.focus();
+  }
+}

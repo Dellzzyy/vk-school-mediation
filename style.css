@@ -188,7 +188,7 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   overflow-y: auto;
   overflow-x: hidden;
   padding: 14px 16px;
-  padding-bottom: calc(76px + var(--safe-bottom));
+  padding-bottom: max(24px, var(--safe-bottom));
   scrollbar-width: none;
 }
 
@@ -1490,60 +1490,538 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   white-space: pre-wrap;
 }
 
-/* ================= 9. НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ ================= */
-.bottom-tab-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: calc(64px + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
-  background: rgba(232, 249, 246, 0.94);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-top: 1.5px solid rgba(11, 77, 80, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 50;
+/* ================= 0. ТОП-БЛОК SOS (НАЧАЛО СТРАНИЦЫ) ================= */
+.top-sos-section {
+  margin-bottom: 20px;
 }
 
-.tab-item {
-  background: none;
-  border: none;
-  color: #4b787a;
+.sos-card-top {
+  position: relative;
+  background: #ffffff url('./images/card-bg.jpg') no-repeat center center / cover;
+  border: 1.5px solid rgba(225, 29, 72, 0.22);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.08);
+}
+
+.sos-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sos-top-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(225, 29, 72, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: #c52243;
+}
+
+.sos-badge-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.sos-top-anon {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #8c414c;
+}
+
+.sos-main-call-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(255, 245, 247, 0.95), rgba(254, 226, 232, 0.9));
+  border: 1.5px solid rgba(225, 29, 72, 0.25);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.sos-main-call-btn:active {
+  transform: scale(0.98);
+}
+
+.sos-phone-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sos-icon-glow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.15);
+}
+
+.sos-phone-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.sos-phone-texts {
   display: flex;
   flex-direction: column;
+}
+
+.sos-phone-number {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: #9f1239;
+  line-height: 1.2;
+}
+
+.sos-phone-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #881337;
+  opacity: 0.85;
+}
+
+.sos-call-action-pill {
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 3px 8px rgba(225, 29, 72, 0.3);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.sos-sub-services {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sos-sub-pill {
+  display: flex;
   align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  padding: 6px 10px;
-  transition: all 0.2s ease;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(11, 77, 80, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  text-decoration: none;
+  color: var(--text-body);
+  transition: all 0.15s ease;
 }
 
-.tab-icon-img {
-  width: 26px;
-  height: 26px;
-  display: block;
+.sos-sub-pill:active {
+  background: #e6f6f4;
+}
+
+.sub-pill-badge {
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.sub-pill-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================= ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ ================= */
+.assistant-unified-section {
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.assistant-header-card {
+  background: #ffffff url('./images/card-bg.jpg') no-repeat center center / cover;
+  border: 1.5px solid var(--border-card);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 14px 14px 10px 14px;
+  box-shadow: 0 -2px 12px rgba(11, 77, 80, 0.05);
+}
+
+.assistant-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.assistant-agent-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-avatar-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(11, 77, 80, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agent-icon {
+  width: 22px;
+  height: 22px;
   object-fit: contain;
-  opacity: 0.72;
-  transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
 }
 
-.tab-item.active .tab-icon-img {
-  opacity: 1;
-  transform: scale(1.1);
-  filter: drop-shadow(0 3px 8px rgba(11, 77, 80, 0.35));
+.agent-meta {
+  display: flex;
+  flex-direction: column;
 }
 
-.tab-item .tab-label {
-  font-size: 10.5px;
+.agent-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-primary);
   letter-spacing: 0.3px;
 }
 
-.tab-item.active {
-  color: var(--accent-primary);
+.agent-status {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
+
+.online-indicator {
+  width: 7px;
+  height: 7px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #10b981;
+}
+
+/* 3 Главных решения (Переключатель) */
+.three-solutions-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  background: rgba(11, 77, 80, 0.06);
+  padding: 4px;
+  border-radius: var(--radius-pill);
+}
+
+.solution-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.solution-tab-btn .sol-icon-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.75;
+}
+
+.solution-tab-btn span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-align: center;
+  line-height: 1.1;
+  font-family: var(--font-sans);
+}
+
+.solution-tab-btn.active {
+  background: #ffffff;
+  color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.12);
+}
+
+.solution-tab-btn.active .sol-icon-img {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.assistant-body-card {
+  background: #ffffff url('./images/card-bg.jpg') no-repeat center center / cover;
+  border: 1.5px solid var(--border-card);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 14px;
+  box-shadow: 0 6px 20px rgba(11, 77, 80, 0.06);
+  min-height: 380px;
+}
+
+.assistant-mode-panel {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.assistant-mode-panel.hidden {
+  display: none !important;
+}
+
+/* Инлайн-кнопки 3 решений в сообщении бота */
+.solutions-inline-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.inline-solution-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid rgba(11, 77, 80, 0.18);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.inline-solution-btn:active {
+  background: #e6f6f4;
+  border-color: var(--accent-primary);
+  transform: scale(0.98);
+}
+
+/* Кнопка прикрепления фото в панели ввода */
+.btn-attach {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-attach-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+/* Стили психологического теста */
+.psych-test-container {
+  padding: 6px 2px;
+}
+
+.test-header-wrap {
+  margin-bottom: 14px;
+}
+
+.test-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.test-main-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-primary);
+  letter-spacing: 0.4px;
+}
+
+.test-q-counter {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.test-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(11, 77, 80, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.test-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6cd8cb, var(--accent-primary));
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.test-question-box {
+  background: rgba(235, 248, 246, 0.7);
+  border: 1px solid rgba(11, 77, 80, 0.12);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.test-question-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.test-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.test-opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid rgba(11, 77, 80, 0.16);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+}
+
+.test-opt-btn:active {
+  background: #e6f6f4;
+  border-color: var(--accent-primary);
+  transform: scale(0.98);
+}
+
+.test-opt-letter {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: rgba(11, 77, 80, 0.1);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.test-opt-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  line-height: 1.4;
+}
+
+/* Карточка результатов теста */
+.test-result-card {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.test-result-icon-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px auto;
+  border-radius: 50%;
+  background: rgba(11, 77, 80, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-result-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.test-result-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-primary);
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.test-result-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.test-result-desc {
+  font-size: 13.5px;
+  color: var(--text-body);
+  line-height: 1.5;
+  text-align: left;
+  background: rgba(235, 248, 246, 0.6);
+  border: 1px solid rgba(11, 77, 80, 0.12);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.test-result-extra {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.test-extra-item {
+  font-size: 12.5px;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.test-extra-item strong {
+  color: var(--text-primary);
+}
+
+.test-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bottom-tab-bar { display: none !important; }
 
 /* Состояние загрузки */
 .loading-state {

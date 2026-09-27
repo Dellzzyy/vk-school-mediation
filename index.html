@@ -8,7 +8,7 @@
   <script src="./vk-bridge.js"></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1789726000">
+  <link rel="stylesheet" href="./style.css?v=1789800000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -29,147 +29,185 @@
       </div>
     </header>
 
-    <!-- Main Scrollable Content Area -->
+    <!-- Main Scrollable Content Area: ЕДИНАЯ ГЛАВНАЯ СТРАНИЦА -->
     <main class="main-content" id="mainContent">
 
-      <!-- ================= 1. HOME SCREEN ================= -->
-      <section id="screen-home" class="screen active">
-        <!-- Situations Showcase Block (Стиль: Fresh Mint & Deep Teal) -->
-        <div class="situations-showcase">
-          <!-- Заголовок с угловыми скобками -->
-          <div class="bracket-header-wrap">
-            <div class="bracket-header">
-              <div class="bracket-tl"></div>
-              <h2>КОГДА<br>ОБРАЩАТЬСЯ?</h2>
-              <div class="bracket-br"></div>
+      <!-- ================= 1. КРИЗИСНЫЙ SOS НАЧАЛО СТРАНИЦЫ ================= -->
+      <section class="top-sos-section" id="topSosSection">
+        <div class="sos-card-top">
+          <div class="sos-top-header">
+            <div class="sos-top-badge">
+              <img src="./images/icons/siren.png" class="sos-badge-icon" alt="SOS">
+              <span>ЭКСТРЕННАЯ ПОМОЩЬ</span>
             </div>
+            <span class="sos-top-anon">БЕСПЛАТНО • АНОНИМНО • 24/7</span>
           </div>
 
-          <!-- 5 Капсул с оригинальными иконками -->
-          <div class="situation-capsules">
-            <!-- 1. Ссора с другом -->
-            <div class="situation-pill" onclick="startWizardWithTopic('friend')">
-              <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="10" y1="3" x2="2" y2="6"/>
-                <line x1="10" y1="11" x2="1" y2="11"/>
-                <line x1="10" y1="19" x2="2" y2="16"/>
-              </svg>
-              <div class="capsule-box">
-                <img src="./images/icons/two_people.png" class="capsule-circle-img" alt="Ссора с другом">
-                <div class="capsule-texts">
-                  <span class="capsule-main-text">ССОРА С ДРУГОМ</span>
-                  <span class="capsule-sub-text">Обиды, недоверие и потеря контакта</span>
-                </div>
+          <!-- Основная кнопка звонка -->
+          <a href="tel:88002000122" class="sos-main-call-btn" onclick="triggerHaptic('heavy')">
+            <div class="sos-phone-left">
+              <div class="sos-icon-glow">
+                <img src="./images/icons/siren.png" class="sos-phone-img" alt="Телефон">
               </div>
-              <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="2" y1="3" x2="10" y2="6"/>
-                <line x1="2" y1="11" x2="11" y2="11"/>
-                <line x1="2" y1="19" x2="10" y2="16"/>
-              </svg>
+              <div class="sos-phone-texts">
+                <span class="sos-phone-number">8 (800) 200-01-22</span>
+                <span class="sos-phone-label">Единый детский телефон доверия РФ</span>
+              </div>
             </div>
+            <div class="sos-call-action-pill">ПОЗВОНИТЬ</div>
+          </a>
 
-            <!-- 2. Конфликт в классе -->
-            <div class="situation-pill" onclick="startWizardWithTopic('class')">
-              <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="10" y1="3" x2="2" y2="6"/>
-                <line x1="10" y1="11" x2="1" y2="11"/>
-                <line x1="10" y1="19" x2="2" y2="16"/>
-              </svg>
-              <div class="capsule-box">
-                <img src="./images/icons/conflict_angry.png" class="capsule-circle-img" alt="Конфликт в классе">
-                <div class="capsule-texts">
-                  <span class="capsule-main-text">КОНФЛИКТ В КЛАССЕ</span>
-                  <span class="capsule-sub-text">Споры, давление коллектива и бойкот</span>
-                </div>
-              </div>
-              <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="2" y1="3" x2="10" y2="6"/>
-                <line x1="2" y1="11" x2="11" y2="11"/>
-                <line x1="2" y1="19" x2="10" y2="16"/>
-              </svg>
-            </div>
-
-            <!-- 3. Слухи и обиды -->
-            <div class="situation-pill" onclick="startWizardWithTopic('rumors')">
-              <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="10" y1="3" x2="2" y2="6"/>
-                <line x1="10" y1="11" x2="1" y2="11"/>
-                <line x1="10" y1="19" x2="2" y2="16"/>
-              </svg>
-              <div class="capsule-box">
-                <img src="./images/icons/chat.png" class="capsule-circle-img" alt="Слухи и обиды">
-                <div class="capsule-texts">
-                  <span class="capsule-main-text">СЛУХИ И ОБИДЫ</span>
-                  <span class="capsule-sub-text">Сплетни, неприятные переписки в беседах</span>
-                </div>
-              </div>
-              <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="2" y1="3" x2="10" y2="6"/>
-                <line x1="2" y1="11" x2="11" y2="11"/>
-                <line x1="2" y1="19" x2="10" y2="16"/>
-              </svg>
-            </div>
-
-            <!-- 4. Недопонимания -->
-            <div class="situation-pill" onclick="startWizardWithTopic('teachers')">
-              <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="10" y1="3" x2="2" y2="6"/>
-                <line x1="10" y1="11" x2="1" y2="11"/>
-                <line x1="10" y1="19" x2="2" y2="16"/>
-              </svg>
-              <div class="capsule-box">
-                <img src="./images/icons/question.png" class="capsule-circle-img" alt="Недопонимания">
-                <div class="capsule-texts">
-                  <span class="capsule-main-text">НЕДОПОНИМАНИЯ</span>
-                  <span class="capsule-sub-text">Спорные ситуации с учителями и близкими</span>
-                </div>
-              </div>
-              <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="2" y1="3" x2="10" y2="6"/>
-                <line x1="2" y1="11" x2="11" y2="11"/>
-                <line x1="2" y1="19" x2="10" y2="16"/>
-              </svg>
-            </div>
-
-            <!-- 5. Буллинг и кибербуллинг -->
-            <div class="situation-pill" onclick="startWizardWithTopic('bullying')">
-              <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="10" y1="3" x2="2" y2="6"/>
-                <line x1="10" y1="11" x2="1" y2="11"/>
-                <line x1="10" y1="19" x2="2" y2="16"/>
-              </svg>
-              <div class="capsule-box">
-                <img src="./images/icons/smartphone.png" class="capsule-circle-img" alt="Буллинг и кибербуллинг">
-                <div class="capsule-texts">
-                  <span class="capsule-main-text">БУЛЛИНГ И КИБЕРБУЛЛИНГ</span>
-                  <span class="capsule-sub-text">Травля в школе или чатах, защита границ</span>
-                </div>
-              </div>
-              <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <line x1="2" y1="3" x2="10" y2="6"/>
-                <line x1="2" y1="11" x2="11" y2="11"/>
-                <line x1="2" y1="19" x2="10" y2="16"/>
-              </svg>
-            </div>
+          <!-- Быстрые службы -->
+          <div class="sos-sub-services">
+            <a href="tel:112" class="sos-sub-pill" onclick="triggerHaptic('light')">
+              <span class="sub-pill-badge">112</span>
+              <span class="sub-pill-name">Служба спасения</span>
+            </a>
+            <a href="tel:+74959895050" class="sos-sub-pill" onclick="triggerHaptic('light')">
+              <span class="sub-pill-badge">МЧС</span>
+              <span class="sub-pill-name">Психологическая помощь</span>
+            </a>
           </div>
+        </div>
+      </section>
 
-          <!-- Нижний бирюзовый баннер -->
-          <div class="support-bottom-banner" onclick="openHelpServicesModal()">
-            <svg class="banner-rays rays-left" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-              <line x1="13" y1="4" x2="2" y2="8"/>
-              <line x1="13" y1="13" x2="1" y2="13"/>
-              <line x1="13" y1="22" x2="2" y2="18"/>
+      <!-- ================= 2. БЛОК СИТУАЦИЙ «КОГДА ОБРАЩАТЬСЯ?» ================= -->
+      <section class="situations-showcase">
+        <!-- Заголовок с угловыми скобками -->
+        <div class="bracket-header-wrap">
+          <div class="bracket-header">
+            <div class="bracket-tl"></div>
+            <h2>КОГДА<br>ОБРАЩАТЬСЯ?</h2>
+            <div class="bracket-br"></div>
+          </div>
+        </div>
+
+        <!-- 5 Капсул с оригинальными иконками и лучиками -->
+        <div class="situation-capsules">
+          <!-- 1. Ссора с другом -->
+          <div class="situation-pill" onclick="startTopicResolution('friend')">
+            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="10" y1="3" x2="2" y2="6"/>
+              <line x1="10" y1="11" x2="1" y2="11"/>
+              <line x1="10" y1="19" x2="2" y2="16"/>
             </svg>
-            <div class="banner-pill">МЫ ВСЕГДА ПОМОЖЕМ ВАМ</div>
-            <svg class="banner-rays rays-right" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-              <line x1="2" y1="4" x2="13" y2="8"/>
-              <line x1="2" y1="13" x2="14" y2="13"/>
-              <line x1="2" y1="22" x2="13" y2="18"/>
+            <div class="capsule-box">
+              <img src="./images/icons/two_people.png" class="capsule-circle-img" alt="Ссора с другом">
+              <div class="capsule-texts">
+                <span class="capsule-main-text">ССОРА С ДРУГОМ</span>
+                <span class="capsule-sub-text">Обиды, недоверие и потеря контакта</span>
+              </div>
+            </div>
+            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="2" y1="3" x2="10" y2="6"/>
+              <line x1="2" y1="11" x2="11" y2="11"/>
+              <line x1="2" y1="19" x2="10" y2="16"/>
+            </svg>
+          </div>
+
+          <!-- 2. Конфликт в классе -->
+          <div class="situation-pill" onclick="startTopicResolution('class')">
+            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="10" y1="3" x2="2" y2="6"/>
+              <line x1="10" y1="11" x2="1" y2="11"/>
+              <line x1="10" y1="19" x2="2" y2="16"/>
+            </svg>
+            <div class="capsule-box">
+              <img src="./images/icons/conflict_angry.png" class="capsule-circle-img" alt="Конфликт в классе">
+              <div class="capsule-texts">
+                <span class="capsule-main-text">КОНФЛИКТ В КЛАССЕ</span>
+                <span class="capsule-sub-text">Споры, давление коллектива и бойкот</span>
+              </div>
+            </div>
+            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="2" y1="3" x2="10" y2="6"/>
+              <line x1="2" y1="11" x2="11" y2="11"/>
+              <line x1="2" y1="19" x2="10" y2="16"/>
+            </svg>
+          </div>
+
+          <!-- 3. Слухи и обиды -->
+          <div class="situation-pill" onclick="startTopicResolution('rumors')">
+            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="10" y1="3" x2="2" y2="6"/>
+              <line x1="10" y1="11" x2="1" y2="11"/>
+              <line x1="10" y1="19" x2="2" y2="16"/>
+            </svg>
+            <div class="capsule-box">
+              <img src="./images/icons/chat.png" class="capsule-circle-img" alt="Слухи и обиды">
+              <div class="capsule-texts">
+                <span class="capsule-main-text">СЛУХИ И ОБИДЫ</span>
+                <span class="capsule-sub-text">Сплетни, неприятные переписки в беседах</span>
+              </div>
+            </div>
+            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="2" y1="3" x2="10" y2="6"/>
+              <line x1="2" y1="11" x2="11" y2="11"/>
+              <line x1="2" y1="19" x2="10" y2="16"/>
+            </svg>
+          </div>
+
+          <!-- 4. Недопонимания -->
+          <div class="situation-pill" onclick="startTopicResolution('teachers')">
+            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="10" y1="3" x2="2" y2="6"/>
+              <line x1="10" y1="11" x2="1" y2="11"/>
+              <line x1="10" y1="19" x2="2" y2="16"/>
+            </svg>
+            <div class="capsule-box">
+              <img src="./images/icons/question.png" class="capsule-circle-img" alt="Недопонимания">
+              <div class="capsule-texts">
+                <span class="capsule-main-text">НЕДОПОНИМАНИЯ</span>
+                <span class="capsule-sub-text">Спорные ситуации с учителями и близкими</span>
+              </div>
+            </div>
+            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="2" y1="3" x2="10" y2="6"/>
+              <line x1="2" y1="11" x2="11" y2="11"/>
+              <line x1="2" y1="19" x2="10" y2="16"/>
+            </svg>
+          </div>
+
+          <!-- 5. Буллинг и кибербуллинг -->
+          <div class="situation-pill" onclick="startTopicResolution('bullying')">
+            <svg class="side-rays rays-left" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="10" y1="3" x2="2" y2="6"/>
+              <line x1="10" y1="11" x2="1" y2="11"/>
+              <line x1="10" y1="19" x2="2" y2="16"/>
+            </svg>
+            <div class="capsule-box">
+              <img src="./images/icons/smartphone.png" class="capsule-circle-img" alt="Буллинг и кибербуллинг">
+              <div class="capsule-texts">
+                <span class="capsule-main-text">БУЛЛИНГ И КИБЕРБУЛЛИНГ</span>
+                <span class="capsule-sub-text">Травля в школе или чатах, защита границ</span>
+              </div>
+            </div>
+            <svg class="side-rays rays-right" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <line x1="2" y1="3" x2="10" y2="6"/>
+              <line x1="2" y1="11" x2="11" y2="11"/>
+              <line x1="2" y1="19" x2="10" y2="16"/>
             </svg>
           </div>
         </div>
 
-        <!-- Экспресс-разбор переписки по скриншоту -->
+        <!-- Нижний бирюзовый баннер -->
+        <div class="support-bottom-banner" onclick="scrollToAssistant()">
+          <svg class="banner-rays rays-left" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+            <line x1="13" y1="4" x2="2" y2="8"/>
+            <line x1="13" y1="13" x2="1" y2="13"/>
+            <line x1="13" y1="22" x2="2" y2="18"/>
+          </svg>
+          <div class="banner-pill">МЫ ВСЕГДА ПОМОЖЕМ ВАМ</div>
+          <svg class="banner-rays rays-right" viewBox="0 0 15 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+            <line x1="2" y1="4" x2="13" y2="8"/>
+            <line x1="2" y1="13" x2="14" y2="13"/>
+            <line x1="2" y1="22" x2="13" y2="18"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ================= 3. ЭКСПРЕСС-ИНСТРУМЕНТ: РАЗБОР СКРИНШОТА ================= -->
+      <section class="express-tool-section">
         <div class="express-tool-card" onclick="openScreenshotAnalyzer()">
           <img src="./images/icons/smartphone.png" class="express-icon-img" alt="Скриншот">
           <div class="express-tool-info">
@@ -179,376 +217,238 @@
           </div>
           <div class="express-arrow">→</div>
         </div>
+        <input type="file" id="globalScreenshotInput" accept="image/*" style="display:none" onchange="handleScreenshotUpload(this)">
       </section>
 
-      <!-- ================= 2. WIZARD SCREEN ================= -->
-      <section id="screen-wizard" class="screen">
-        <div class="screen-header">
-          <button class="btn-back" onclick="navigateTo('home')">←</button>
-          <h2>МАСТЕР РАЗРЕШЕНИЯ КОНФЛИКТОВ</h2>
-        </div>
-
-        <div class="wizard-stepper">
-          <div class="step-dot active" id="stepDot1">1</div>
-          <div class="step-line" id="stepLine1"></div>
-          <div class="step-dot" id="stepDot2">2</div>
-          <div class="step-line" id="stepLine2"></div>
-          <div class="step-dot" id="stepDot3">3</div>
-          <div class="step-line" id="stepLine3"></div>
-          <div class="step-dot" id="stepDot4">4</div>
-        </div>
-
-        <!-- Step 1: Who is the opponent -->
-        <div id="wizardStep1" class="wizard-step-content active">
-          <h3 class="step-title">С КЕМ ВОЗНИК СПОР ИЛИ ТРУДНАЯ СИТУАЦИЯ?</h3>
-          <p class="step-desc">Выбери, чье поведение вызывает напряжение:</p>
-          <div class="option-cards-grid">
-            <button class="option-card active" onclick="selectWizardOption('opponent', 'Одноклассник / сверстник', this)">
-              <img src="./images/icons/student_boy.png" class="opt-icon-img" alt="Одноклассник">
-              <div class="opt-text-wrap">
-                <span class="opt-title">ОДНОКЛАССНИК</span>
-                <span class="opt-sub">Сверстник, знакомый из параллели</span>
+      <!-- ================= 4. ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ (ЧАТ + МАСТЕР + ТЕСТЫ) ================= -->
+      <section class="assistant-unified-section" id="assistantSection">
+        <div class="assistant-header-card">
+          <div class="assistant-title-row">
+            <div class="assistant-agent-badge">
+              <div class="agent-avatar-box">
+                <img src="./images/icons/sparkles.png" class="agent-icon" alt="Медиатор">
               </div>
-            </button>
-            <button class="option-card" onclick="selectWizardOption('opponent', 'Учитель / преподаватель', this)">
-              <img src="./images/icons/document_pen.png" class="opt-icon-img" alt="Учитель">
-              <div class="opt-text-wrap">
-                <span class="opt-title">УЧИТЕЛЬ</span>
-                <span class="opt-sub">Завуч, предметник, классный руководитель</span>
+              <div class="agent-meta">
+                <h3 class="agent-name">СЛУЖБА ШКОЛЬНОЙ МЕДИАЦИИ</h3>
+                <span class="agent-status"><span class="online-indicator"></span> ИИ-Медиатор & Психолог 24/7</span>
               </div>
+            </div>
+            <button class="btn-clear-chat" onclick="clearUnifiedAssistant()" title="Очистить / Начать заново">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
             </button>
-            <button class="option-card" onclick="selectWizardOption('opponent', 'Родители / родственники', this)">
-              <img src="./images/icons/family.png" class="opt-icon-img" alt="Родители">
-              <div class="opt-text-wrap">
-                <span class="opt-title">РОДИТЕЛИ</span>
-                <span class="opt-sub">Мама, папа, опекуны, старшие</span>
-              </div>
-            </button>
-            <button class="option-card" onclick="selectWizardOption('opponent', 'Близкий друг / подруга', this)">
-              <img src="./images/icons/handshake.png" class="opt-icon-img" alt="Друг">
-              <div class="opt-text-wrap">
-                <span class="opt-title">ДРУГ / ПОДРУГА</span>
-                <span class="opt-sub">Обида, предательство, недопонимание</span>
-              </div>
-            </button>
-          </div>
-          <div class="step-actions">
-            <button class="btn-primary" onclick="goToWizardStep(2)">ДАЛЕЕ →</button>
-          </div>
-        </div>
-
-        <!-- Step 2: What happened (Category) -->
-        <div id="wizardStep2" class="wizard-step-content">
-          <h3 class="step-title">В ЧЕМ ГЛАВНАЯ СУТЬ ПРОБЛЕМЫ?</h3>
-          <p class="step-desc">Определи сферу разногласий:</p>
-          <div class="category-pills">
-            <button class="cat-pill active" onclick="selectWizardOption('category', 'Травля / подколы в классе или чате', this)">
-              <img src="./images/icons/conflict_angry.png" class="cat-pill-img" alt="Буллинг">
-              <span>ТРАВЛЯ / БУЛЛИНГ В ЧАТЕ</span>
-            </button>
-            <button class="cat-pill" onclick="selectWizardOption('category', 'Спор из-за оценок или домашних заданий', this)">
-              <img src="./images/icons/scales.png" class="cat-pill-img" alt="Оценка">
-              <span>НЕСПРАВЕДЛИВАЯ ОЦЕНКА / СПОР</span>
-            </button>
-            <button class="cat-pill" onclick="selectWizardOption('category', 'Нарушение личных границ и слухи', this)">
-              <img src="./images/icons/padlock.png" class="cat-pill-img" alt="Границы">
-              <span>НАРУШЕНИЕ ЛИЧНЫХ ГРАНИЦ / СПЛЕТНИ</span>
-            </button>
-            <button class="cat-pill" onclick="selectWizardOption('category', 'Угрозы, бойкот или давление толпы', this)">
-              <img src="./images/icons/two_people.png" class="cat-pill-img" alt="Бойкот">
-              <span>БОЙКОТ / ДАВЛЕНИЕ ГРУППЫ</span>
-            </button>
-            <button class="cat-pill" onclick="selectWizardOption('category', 'Другая нестандартная ситуация', this)">
-              <img src="./images/icons/question.png" class="cat-pill-img" alt="Другое">
-              <span>ДРУГАЯ СИТУАЦИЯ</span>
-            </button>
-          </div>
-          <div class="step-actions dual">
-            <button class="btn-secondary" onclick="goToWizardStep(1)">← НАЗАД</button>
-            <button class="btn-primary" onclick="goToWizardStep(3)">ДАЛЕЕ →</button>
-          </div>
-        </div>
-
-        <!-- Step 3: Detailed Description -->
-        <div id="wizardStep3" class="wizard-step-content">
-          <h3 class="step-title">ОПИШИ, ЧТО ИМЕННО ПРОИЗОШЛО</h3>
-          <p class="step-desc">Пиши простыми словами, как есть. Чем точнее детали, тем практичнее будет совет.</p>
-          
-          <div class="textarea-wrap">
-            <textarea id="wizardDesc" rows="5" placeholder="Например: Он обозвал меня перед всеми на перемене, потому что я не дал списать. Все смеялись, я растерялся и промолчал. Теперь не знаю, как завтра зайти в класс..."></textarea>
           </div>
 
-          <div class="upload-box" onclick="document.getElementById('wizardFileInput').click()">
-            <input type="file" id="wizardFileInput" accept="image/*" style="display:none" onchange="handleWizardFile(this)">
-            <img src="./images/icons/smartphone.png" class="upload-icon-img" alt="Фото">
-            <span class="upload-text" id="wizardUploadText">Прикрепить скриншот переписки (по желанию)</span>
-          </div>
-          <div id="wizardImgPreviewWrap" class="img-preview-wrap hidden">
-            <img id="wizardImgPreview" src="" alt="Превью">
-            <button class="btn-remove-img" onclick="removeWizardImg(event)">✕</button>
-          </div>
-
-          <div class="step-actions dual">
-            <button class="btn-secondary" onclick="goToWizardStep(2)">← НАЗАД</button>
-            <button class="btn-primary-glow" id="btnStartAnalysis" onclick="startConflictAnalysis()">
-              <span>ПОЛУЧИТЬ ПЛАН МЕДИАТОРА</span>
+          <!-- 3 Главных решения (Переключатель инструментов) -->
+          <div class="three-solutions-bar">
+            <button class="solution-tab-btn active" id="tabBtnChat" onclick="setAssistantMode('chat')">
+              <img src="./images/icons/chat.png" class="sol-icon-img" alt="">
+              <span>РАЗОБРАТЬ КАК МЕДИАТОР</span>
+            </button>
+            <button class="solution-tab-btn" id="tabBtnWizard" onclick="setAssistantMode('wizard')">
+              <img src="./images/icons/scales.png" class="sol-icon-img" alt="">
+              <span>МАСТЕР КОНФЛИКТОВ</span>
+            </button>
+            <button class="solution-tab-btn" id="tabBtnTest" onclick="setAssistantMode('test')">
+              <img src="./images/icons/student_boy.png" class="sol-icon-img" alt="">
+              <span>ПСИХОЛОГИЧЕСКИЙ ТЕСТ</span>
             </button>
           </div>
         </div>
 
-        <!-- Step 4: Results & Resolution Plan -->
-        <div id="wizardStep4" class="wizard-step-content">
-          <div id="wizardLoading" class="loading-state">
-            <div class="spinner"></div>
-            <p>ИИ-Медиатор анализирует ситуацию по принципам восстановительного подхода...</p>
-          </div>
+        <!-- Тело центра поддержки -->
+        <div class="assistant-body-card">
 
-          <div id="wizardResult" class="wizard-result hidden">
-            <div class="result-badge"><img src="./images/icons/scales.png" class="badge-icon-img" alt=""> ГОТОВОЕ РЕШЕНИЕ МЕДИАТОРА</div>
-            <div class="result-body" id="wizardResultText"></div>
-            
-            <div class="result-actions">
-              <button class="btn-primary" onclick="transferWizardToChat()">
-                ЗАДАТЬ УТОЧНЯЮЩИЙ ВОПРОС В ЧАТЕ
+          <!-- 1. РЕЖИМ ЧАТА С МЕДИАТОРОМ -->
+          <div id="assistantModeChat" class="assistant-mode-panel active">
+            <div class="chat-messages" id="chatMessages">
+              <div class="msg bot-msg">
+                <div class="bubble">
+                  👋 <strong>Привет! Я цифровая служба школьной медиации.</strong><br><br>
+                  Помогаю спокойно и по-человечески разобраться в любой сложной ситуации в школе, классе или дома.<br><br>
+                  Напиши, что случилось, или отправь слово <strong>«тест»</strong>, и я предложу три решения:
+                  <div class="solutions-inline-options">
+                    <button class="inline-solution-btn" onclick="setAssistantMode('test')">
+                      🧠 <strong>Психологический тест</strong> (стиль поведения в споре)
+                    </button>
+                    <button class="inline-solution-btn" onclick="startMediatorChatPrompt()">
+                      💬 <strong>Разобрать ситуацию как медиатор</strong>
+                    </button>
+                    <button class="inline-solution-btn" onclick="setAssistantMode('wizard')">
+                      ⚖️ <strong>Мастер разрешения конфликтов</strong>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Подсказки быстрых фраз -->
+            <div class="chat-suggestions" id="chatSuggestions"></div>
+
+            <!-- Панель ввода чата -->
+            <div class="chat-input-bar">
+              <button class="btn-attach" onclick="triggerChatPhotoUpload()" title="Прикрепить скриншот">
+                <img src="./images/icons/smartphone.png" class="btn-attach-img" alt="Фото">
               </button>
-              <button class="btn-secondary" onclick="resetWizard()">
-                РАЗОБРАТЬ ДРУГУЮ СИТУАЦИЮ
+              <input type="text" id="chatInput" placeholder="Опиши ситуацию или напиши «тест»..." onkeypress="handleChatKeyPress(event)">
+              <button class="btn-send" id="btnSendChat" onclick="sendChatMessage()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
               </button>
             </div>
+            <input type="file" id="chatFileInput" accept="image/*" style="display:none" onchange="handleChatFileUpload(this)">
           </div>
-        </div>
-      </section>
 
-      <!-- ================= 3. CHAT SCREEN ================= -->
-      <section id="screen-chat" class="screen">
-        <div class="screen-header chat-header">
-          <div class="chat-agent-info">
-            <div class="agent-avatar">
-              <img src="./images/icons/sparkles.png" class="agent-avatar-img" alt="Медиатор">
+          <!-- 2. РЕЖИМ МАСТЕРА РАЗРЕШЕНИЯ КОНФЛИКТОВ -->
+          <div id="assistantModeWizard" class="assistant-mode-panel hidden">
+            <div class="wizard-stepper">
+              <div class="step-dot active" id="stepDot1">1</div>
+              <div class="step-line" id="stepLine1"></div>
+              <div class="step-dot" id="stepDot2">2</div>
+              <div class="step-line" id="stepLine2"></div>
+              <div class="step-dot" id="stepDot3">3</div>
+              <div class="step-line" id="stepLine3"></div>
+              <div class="step-dot" id="stepDot4">4</div>
             </div>
-            <div>
-              <div class="agent-name">ШКОЛЬНЫЙ МЕДИАТОР</div>
-              <div class="agent-status"><span class="online-indicator"></span> На связи онлайн</div>
+
+            <!-- Шаг 1: Оппонент -->
+            <div id="wizardStep1" class="wizard-step-content active">
+              <h3 class="step-title">С КЕМ ВОЗНИК СПОР ИЛИ ТРУДНАЯ СИТУАЦИЯ?</h3>
+              <p class="step-desc">Выбери, чье поведение вызывает напряжение:</p>
+              <div class="option-cards-grid">
+                <button class="option-card active" onclick="selectWizardOption('opponent', 'Одноклассник / сверстник', this)">
+                  <img src="./images/icons/student_boy.png" class="opt-icon-img" alt="Одноклассник">
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">ОДНОКЛАССНИК</span>
+                    <span class="opt-sub">Сверстник, знакомый из параллели</span>
+                  </div>
+                </button>
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Учитель / преподаватель', this)">
+                  <img src="./images/icons/document_pen.png" class="opt-icon-img" alt="Учитель">
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">УЧИТЕЛЬ</span>
+                    <span class="opt-sub">Завуч, предметник, классный руководитель</span>
+                  </div>
+                </button>
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Родители / родственники', this)">
+                  <img src="./images/icons/family.png" class="opt-icon-img" alt="Родители">
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">РОДИТЕЛИ</span>
+                    <span class="opt-sub">Мама, папа, опекуны, старшие</span>
+                  </div>
+                </button>
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Близкий друг / подруга', this)">
+                  <img src="./images/icons/handshake.png" class="opt-icon-img" alt="Друг">
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">ДРУГ / ПОДРУГА</span>
+                    <span class="opt-sub">Обида, предательство, недопонимание</span>
+                  </div>
+                </button>
+              </div>
+              <div class="step-actions">
+                <button class="btn-primary" onclick="goToWizardStep(2)">ДАЛЕЕ →</button>
+              </div>
+            </div>
+
+            <!-- Шаг 2: Категория -->
+            <div id="wizardStep2" class="wizard-step-content">
+              <h3 class="step-title">В ЧЕМ ГЛАВНАЯ СУТЬ ПРОБЛЕМЫ?</h3>
+              <p class="step-desc">Определи сферу разногласий:</p>
+              <div class="category-pills">
+                <button class="cat-pill active" onclick="selectWizardOption('category', 'Травля / подколы в классе или чате', this)">
+                  <img src="./images/icons/conflict_angry.png" class="cat-pill-img" alt="Буллинг">
+                  <span>ТРАВЛЯ / БУЛЛИНГ В ЧАТЕ</span>
+                </button>
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Спор из-за оценок или домашних заданий', this)">
+                  <img src="./images/icons/scales.png" class="cat-pill-img" alt="Оценка">
+                  <span>НЕСПРАВЕДЛИВАЯ ОЦЕНКА / СПОР</span>
+                </button>
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Нарушение личных границ и слухи', this)">
+                  <img src="./images/icons/padlock.png" class="cat-pill-img" alt="Границы">
+                  <span>НАРУШЕНИЕ ЛИЧНЫХ ГРАНИЦ / СПЛЕТНИ</span>
+                </button>
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Угрозы, бойкот или давление толпы', this)">
+                  <img src="./images/icons/two_people.png" class="cat-pill-img" alt="Бойкот">
+                  <span>БОЙКОТ / ДАВЛЕНИЕ ГРУППЫ</span>
+                </button>
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Другая нестандартная ситуация', this)">
+                  <img src="./images/icons/question.png" class="cat-pill-img" alt="Другое">
+                  <span>ДРУГАЯ СИТУАЦИЯ</span>
+                </button>
+              </div>
+              <div class="step-actions dual">
+                <button class="btn-secondary" onclick="goToWizardStep(1)">← НАЗАД</button>
+                <button class="btn-primary" onclick="goToWizardStep(3)">ДАЛЕЕ →</button>
+              </div>
+            </div>
+
+            <!-- Шаг 3: Описание ситуации -->
+            <div id="wizardStep3" class="wizard-step-content">
+              <h3 class="step-title">ОПИШИ, ЧТО ИМЕННО ПРОИЗОШЛО</h3>
+              <p class="step-desc">Пиши простыми словами, как есть. Чем точнее детали, тем практичнее будет совет.</p>
+              
+              <div class="textarea-wrap">
+                <textarea id="wizardDesc" rows="5" placeholder="Например: Он обозвал меня перед всеми на перемене, потому что я не дал списать. Все смеялись, я растерялся и промолчал. Теперь не знаю, как завтра зайти в класс..."></textarea>
+              </div>
+
+              <div class="upload-box" onclick="document.getElementById('wizardFileInput').click()">
+                <input type="file" id="wizardFileInput" accept="image/*" style="display:none" onchange="handleWizardFile(this)">
+                <img src="./images/icons/smartphone.png" class="upload-icon-img" alt="Фото">
+                <span class="upload-text" id="wizardUploadText">Прикрепить скриншот переписки (по желанию)</span>
+              </div>
+              <div id="wizardImgPreviewWrap" class="img-preview-wrap hidden">
+                <img id="wizardImgPreview" src="" alt="Превью">
+                <button class="btn-remove-img" onclick="removeWizardImg(event)">✕</button>
+              </div>
+
+              <div class="step-actions dual">
+                <button class="btn-secondary" onclick="goToWizardStep(2)">← НАЗАД</button>
+                <button class="btn-primary-glow" id="btnStartAnalysis" onclick="startConflictAnalysis()">
+                  <span>ПОЛУЧИТЬ ПЛАН МЕДИАТОРА</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Шаг 4: Результат анализа -->
+            <div id="wizardStep4" class="wizard-step-content">
+              <div id="wizardLoading" class="loading-state">
+                <div class="spinner"></div>
+                <p>ИИ-Медиатор анализирует ситуацию по принципам восстановительного подхода...</p>
+              </div>
+
+              <div id="wizardResult" class="wizard-result hidden">
+                <div class="result-badge"><img src="./images/icons/scales.png" class="badge-icon-img" alt=""> ГОТОВОЕ РЕШЕНИЕ МЕДИАТОРА</div>
+                <div class="result-body" id="wizardResultText"></div>
+                
+                <div class="result-actions">
+                  <button class="btn-primary" onclick="transferWizardToChat()">
+                    ЗАДАТЬ УТОЧНЯЮЩИЙ ВОПРОС В ЧАТЕ
+                  </button>
+                  <button class="btn-secondary" onclick="resetWizard()">
+                    РАЗОБРАТЬ ДРУГУЮ СИТУАЦИЮ
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <button class="btn-clear-chat" onclick="clearWebChat()" title="Очистить чат">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
-        </div>
 
-        <div class="chat-messages" id="chatMessages">
-          <div class="msg bot-msg">
-            <div class="bubble">
-              Привет! Я твой конфиденциальный медиатор. Готов спокойно и по-человечески разобрать любую ситуацию в школе, дома или в чате.
-              <br><br>
-              Что тебя сейчас волнует?
+          <!-- 3. РЕЖИМ ПСИХОЛОГИЧЕСКОГО ТЕСТА -->
+          <div id="assistantModeTest" class="assistant-mode-panel hidden">
+            <div class="psych-test-container" id="psychTestContainer">
+              <!-- Интерактивный контент теста рендерится через JavaScript -->
             </div>
           </div>
-        </div>
 
-        <!-- Quick suggestion pills above input -->
-        <div class="chat-suggestions" id="chatSuggestions"></div>
-
-        <!-- Input bar -->
-        <div class="chat-input-bar">
-          <input type="text" id="chatInput" placeholder="Напиши сообщение медиатору..." onkeypress="handleChatKeyPress(event)">
-          <button class="btn-send" id="btnSendChat" onclick="sendChatMessage()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </div>
-      </section>
-
-      <!-- ================= 4. KNOWLEDGE BASE SCREEN ================= -->
-      <section id="screen-kb" class="screen">
-        <div class="screen-header">
-          <h2>ТВОИ ПРАВА И ГРАНИЦЫ</h2>
-          <span class="badge-accent">БАЗА ЗНАНИЙ</span>
-        </div>
-        <p class="kb-intro">Понятный правовой гид для школьников: как отстаивать свои интересы без конфликтов и нарушений.</p>
-
-        <div class="kb-list" id="kbList">
-          <div class="loading-state"><div class="spinner"></div></div>
-        </div>
-      </section>
-
-      <!-- ================= 5. SOS EMERGENCY SCREEN ================= -->
-      <section id="screen-sos" class="screen">
-        <div class="sos-banner">
-          <div class="sos-glow-circle">
-            <img src="./images/icons/siren.png" class="sos-icon-img" alt="SOS">
-          </div>
-          <h1>КРИЗИСНАЯ ПОМОЩЬ</h1>
-          <p>Если тебе или кому-то рядом угрожает опасность, насилие или вымогательство — не оставайся наедине с проблемой.</p>
-        </div>
-
-        <!-- Primary Emergency Call Button -->
-        <a href="tel:88002000122" class="call-sos-card">
-          <div class="sos-phone-icon">
-            <img src="./images/icons/siren.png" class="sos-call-img" alt="Телефон доверия">
-          </div>
-          <div class="sos-phone-info">
-            <div class="sos-pill">БЕСПЛАТНО • АНОНИМНО • 24/7</div>
-            <div class="sos-number">8 (800) 200-01-22</div>
-            <div class="sos-label">Единый детский телефон доверия РФ</div>
-          </div>
-        </a>
-
-        <!-- Additional Services -->
-        <div class="section-card">
-          <h3 class="section-subtitle">СЛУЖБЫ ЭКСТРЕННОЙ ПОДДЕРЖКИ</h3>
-          <div class="service-row">
-            <div>
-              <div class="service-name">ЕДИНАЯ СЛУЖБА СПАСЕНИЯ</div>
-              <div class="service-desc">При физической угрозе или нападении</div>
-            </div>
-            <a href="tel:112" class="btn-call-mini">112</a>
-          </div>
-          <div class="service-row">
-            <div>
-              <div class="service-name">ПСИХОЛОГИЧЕСКАЯ ПОМОЩЬ МЧС</div>
-              <div class="service-desc">Кризисные эмоциональные состояния</div>
-            </div>
-            <a href="tel:+74959895050" class="btn-call-mini">ПОЗВОНИТЬ</a>
-          </div>
-        </div>
-
-        <!-- Safety Rules -->
-        <div class="section-card">
-          <h3 class="section-subtitle">ЗОЛОТЫЕ ПРАВИЛА БЕЗОПАСНОСТИ</h3>
-          <ul class="safety-list">
-            <li><strong>Не уходи в безлюдные места:</strong> держись в поле зрения камер, охранников и учителей.</li>
-            <li><strong>Сделай скриншоты угроз:</strong> не удаляй переписку с угрозами — это юридическое доказательство.</li>
-            <li><strong>Попроси помощи у взрослых:</strong> обращение за защитой — это признак силы и взрослости.</li>
-          </ul>
         </div>
       </section>
 
     </main>
-
-    <!-- Modal for Help & Services List (Всплывающее окно) -->
-    <div id="helpServicesModal" class="modal-backdrop hidden" onclick="closeHelpModal(event)">
-      <div class="modal-sheet" onclick="event.stopPropagation()">
-        <div class="modal-drag-handle"></div>
-        <div class="modal-header">
-          <div class="modal-titles">
-            <span class="modal-tag">СЛУЖБА МЕДИАЦИИ 24/7</span>
-            <h3 class="modal-title">КАК МЫ МОЖЕМ ПОМОЧЬ?</h3>
-          </div>
-          <button class="btn-modal-close" onclick="closeHelpModal()">✕</button>
-        </div>
-        <p class="services-modal-intro">Выбери удобный формат разрешения ситуации:</p>
-
-        <div class="services-list">
-          <!-- 1. Пошаговый мастер -->
-          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('wizard')">
-            <img src="./images/icons/scales.png" class="service-icon-img" alt="Мастер">
-            <div class="service-info">
-              <div class="service-title">ПОШАГОВЫЙ МАСТЕР РАЗБОРА</div>
-              <div class="service-sub">3 простых вопроса — персональный план медиатора</div>
-            </div>
-            <span class="service-arrow">→</span>
-          </div>
-
-          <!-- 2. Разбор скриншота -->
-          <div class="service-row-card" onclick="closeHelpModal(); openScreenshotAnalyzer()">
-            <img src="./images/icons/smartphone.png" class="service-icon-img" alt="Скриншот">
-            <div class="service-info">
-              <div class="service-title">РАЗБОР ПЕРЕПИСКИ ПО СКРИНШОТУ</div>
-              <div class="service-sub">Загрузи фото спора — анализ манипуляций и ответ</div>
-            </div>
-            <span class="service-arrow">→</span>
-          </div>
-
-          <!-- 3. Диалог с ИИ -->
-          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('chat')">
-            <img src="./images/icons/sparkles.png" class="service-icon-img" alt="Чат">
-            <div class="service-info">
-              <div class="service-title">ДИАЛОГ С ИИ-МЕДИАТОРОМ</div>
-              <div class="service-sub">Конфиденциальная беседа наедине в онлайн-чате</div>
-            </div>
-            <span class="service-arrow">→</span>
-          </div>
-
-          <!-- 4. Права в школе -->
-          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('kb')">
-            <img src="./images/icons/shield_check.png" class="service-icon-img" alt="Права">
-            <div class="service-info">
-              <div class="service-title">ТВОИ ПРАВА В ШКОЛЕ</div>
-              <div class="service-sub">Законы РФ о буллинге, оценках, правах и границах</div>
-            </div>
-            <span class="service-arrow">→</span>
-          </div>
-
-          <!-- 5. Кризисный SOS -->
-          <div class="service-row-card" onclick="closeHelpModal(); navigateTo('sos')">
-            <img src="./images/icons/siren.png" class="service-icon-img" alt="SOS">
-            <div class="service-info">
-              <div class="service-title">КРИЗИСНЫЙ SOS-ЦЕНТР</div>
-              <div class="service-sub">Бесплатный детский телефон 8 (800) 200-01-22</div>
-            </div>
-            <span class="service-arrow">→</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal for Article Details -->
-    <div id="articleModal" class="modal-backdrop hidden" onclick="closeArticleModal(event)">
-      <div class="modal-sheet" onclick="event.stopPropagation()">
-        <div class="modal-drag-handle"></div>
-        <div class="modal-header">
-          <span id="modalArticleIcon" class="modal-icon"><img src="./images/icons/books.png" class="modal-header-icon-img" alt=""></span>
-          <div class="modal-titles">
-            <span id="modalArticleTag" class="modal-tag">ЗАКОН И ПРАВА</span>
-            <h3 id="modalArticleTitle" class="modal-title">ЗАГОЛОВОК СТАТЬИ</h3>
-          </div>
-          <button class="btn-modal-close" onclick="closeArticleModal()">✕</button>
-        </div>
-        <div id="modalArticleContent" class="modal-body"></div>
-      </div>
-    </div>
-
-    <!-- Bottom Tab Bar with exact Row 1 icons from sprite sheet -->
-    <nav class="bottom-tab-bar">
-      <button class="tab-item active" data-target="home" onclick="navigateTo('home')">
-        <span class="tab-icon">
-          <img src="./images/icons/home.png" class="tab-icon-img" alt="Главная">
-        </span>
-        <span class="tab-label">ГЛАВНАЯ</span>
-      </button>
-      <button class="tab-item" data-target="wizard" onclick="navigateTo('wizard')">
-        <span class="tab-icon">
-          <img src="./images/icons/scales.png" class="tab-icon-img" alt="Мастер">
-        </span>
-        <span class="tab-label">МАСТЕР</span>
-      </button>
-      <button class="tab-item" data-target="chat" onclick="navigateTo('chat')">
-        <span class="tab-icon">
-          <img src="./images/icons/chat.png" class="tab-icon-img" alt="Чат">
-        </span>
-        <span class="tab-label">ИИ-ЧАТ</span>
-      </button>
-      <button class="tab-item" data-target="kb" onclick="navigateTo('kb')">
-        <span class="tab-icon">
-          <img src="./images/icons/books.png" class="tab-icon-img" alt="Права">
-        </span>
-        <span class="tab-label">ПРАВА</span>
-      </button>
-      <button class="tab-item" data-target="sos" onclick="navigateTo('sos')">
-        <span class="tab-icon">
-          <img src="./images/icons/siren.png" class="tab-icon-img" alt="SOS">
-        </span>
-        <span class="tab-label">SOS</span>
-      </button>
-    </nav>
   </div>
 
-  <script src="./app.js?v=1789726000"></script>
+  <script src="./app.js?v=1789800000"></script>
 </body>
 </html>
