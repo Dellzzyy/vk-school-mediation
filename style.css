@@ -2029,7 +2029,7 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 /* Шкала баллов и стилей */
 .test-bars-card,
 .test-combo-card,
-.test-situations-card,
+.test-portrait-card,
 .test-recs-card {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(11, 77, 80, 0.12);
@@ -2118,42 +2118,13 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   margin: 0;
 }
 
-/* 5 жизненных ситуаций */
-.test-sit-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.test-sit-item {
-  padding: 10px 12px;
-  background: #fbfdfd;
-  border: 1px solid rgba(11, 77, 80, 0.09);
-  border-radius: var(--radius-sm);
-}
-
-.test-sit-header {
-  font-size: 11.5px;
-  font-weight: 800;
-  color: var(--accent-primary);
-  margin-bottom: 4px;
-}
-
-.test-sit-insight {
-  font-size: 12.5px;
-  font-weight: 600;
+/* Цельный психологический портрет */
+.test-portrait-narrative {
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--text-primary);
-  line-height: 1.45;
-  margin-bottom: 6px;
-}
-
-.test-sit-choice {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.35;
-  background: rgba(11, 77, 80, 0.04);
-  padding: 4px 8px;
-  border-radius: var(--radius-xs);
+  margin: 0;
+  text-align: left;
 }
 
 /* Рекомендации */
