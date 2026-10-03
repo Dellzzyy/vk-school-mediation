@@ -20,6 +20,7 @@ const state = {
     imageMime: 'image/jpeg'
   },
   psychTest: {
+    started: false,
     currentQ: 0,
     answers: [],
     completed: false
@@ -28,103 +29,284 @@ const state = {
 };
 
 // =====================================================================
-// ДАННЫЕ ПСИХОЛОГИЧЕСКОГО ТЕСТА (Адаптация метода К. Томаса)
+// ДАННЫЕ ПСИХОЛОГИЧЕСКОГО ТЕСТА (Глубокий анализ поведения в конфликте)
 // =====================================================================
 const PSYCH_TEST = {
-  title: "ТЕСТ: ТВОЙ СТИЛЬ В КОНФЛИКТАХ",
-  subtitle: "Методика К. Томаса в школьной адаптации",
+  title: "КАК ТЫ ОБЫЧНО ВЕДЁШЬ СЕБЯ В КОНФЛИКТЕ?",
+  subtitle: "Комплексный анализ школьных ситуаций и стилей поведения",
+  intro: {
+    lead: "Иногда достаточно одной фразы, сообщения в чате или неудачной шутки, чтобы настроение испортилось на весь день. А иногда спор начинается из-за пустяка и постепенно становится серьёзным.",
+    body: "У каждого есть свой привычный способ реагировать на такие ситуации. Кто-то сразу говорит о том, что его задело, кто-то старается договориться, а кто-то предпочитает отойти в сторону.\n\nПредставь себя в каждой из ситуаций ниже. Выбирай ответ, который больше всего похож на твою обычную реакцию.",
+    note: "Здесь нет хороших или плохих ответов. Главное — отвечать честно."
+  },
+  disclaimer: "Это не оценка характера и не определение того, «какой ты человек». Результат показывает только то, какой способ поведения чаще выбирается в конфликтных ситуациях.",
   questions: [
     {
-      q: "1. Одноклассник публично отпустил обидную шутку в твой адрес. Твоя первая реакция?",
+      id: 1,
+      topic: "В общем чате и соцсетях",
+      q: "1. В общем чате кто-то написал про тебя неприятную шутку, а другие ребята её поддержали. Что ты, скорее всего, сделаешь?",
       options: [
-        { text: "Осажу его еще жестче при всех, чтобы больше не лез и знал свое место", style: "compete", letter: "A" },
-        { text: "Спокойно предложу после урока поговорить наедине и прояснить шутку", style: "collab", letter: "B" },
-        { text: "Отшучусь в ответ или переведу в компромиссную тему без открытой ссоры", style: "compromise", letter: "C" },
-        { text: "Проигнорирую и отойду в сторону, сделав вид, что не заметил", style: "avoid", letter: "D" },
-        { text: "Промолчу и стерплю, лишь бы не портить отношения и не устраивать скандал", style: "accommodate", letter: "E" }
+        {
+          letter: "А",
+          text: "Отвечу прямо и достаточно жёстко, чтобы дать понять: со мной так разговаривать нельзя.",
+          style: "compete",
+          scores: { compete: 10, avoid: 1, collab: 1, compromise: 0, accommodate: 0 },
+          insight: "В чатах и соцсетях ты не даёшь нарушать свои границы и пресекаешь колкости сразу в лоб."
+        },
+        {
+          letter: "Б",
+          text: "Предложу спокойно обсудить ситуацию отдельно и понять, зачем это было сказано.",
+          style: "collab",
+          scores: { collab: 10, compromise: 3, accommodate: 1, compete: 1, avoid: 0 },
+          insight: "При выпадах в сети ты выбираешь зрелый подход — перенести разговор один на один и выяснить мотивы без публичного скандала."
+        },
+        {
+          letter: "В",
+          text: "Постараюсь ответить спокойно и перевести разговор в сторону, где конфликт не будет продолжаться.",
+          style: "compromise",
+          scores: { compromise: 10, avoid: 3, collab: 2, accommodate: 1, compete: 0 },
+          insight: "В групповых чатах ты умело гасишь агрессию спокойствием или сменой фокуса, не давая ссоре разрастись."
+        },
+        {
+          letter: "Г",
+          text: "Не стану отвечать и постараюсь просто не продолжать этот разговор.",
+          style: "avoid",
+          scores: { avoid: 10, accommodate: 2, compromise: 1, compete: 0, collab: 0 },
+          insight: "В сетевых перепалках ты предпочитаешь информационный детокс — игнорируешь провокации и не кормишь конфликт вниманием."
+        },
+        {
+          letter: "Д",
+          text: "Промолчу, даже если мне неприятно, чтобы не испортить отношения с ребятами.",
+          style: "accommodate",
+          scores: { accommodate: 10, avoid: 4, compromise: 1, compete: 0, collab: 0 },
+          insight: "В компании для тебя крайне важна атмосфера дружбы, поэтому ради мира ты готов сдержать первое чувство обиды."
+        }
       ]
     },
     {
-      q: "2. При подготовке командного проекта возник спор о том, кто какую часть делает:",
+      id: 2,
+      topic: "В совместном проекте",
+      q: "2. Вы с друзьями готовите общий проект, но никак не можете договориться, кто за что отвечает.",
       options: [
-        { text: "Настаиваю только на своем плане: я лучше знаю, как победить", style: "compete", letter: "A" },
-        { text: "Сядем и вместе распределим задачи с учетом сильных сторон каждого", style: "collab", letter: "B" },
-        { text: "Предложу разделить спорные обязанности поровну или по жребию", style: "compromise", letter: "C" },
-        { text: "Пусть делают как хотят, я выполню только свой минимум", style: "avoid", letter: "D" },
-        { text: "Соглашусь на любые чужие условия, чтобы не спорить в команде", style: "accommodate", letter: "E" }
+        {
+          letter: "А",
+          text: "Буду настаивать на своём варианте, если считаю его наиболее подходящим.",
+          style: "compete",
+          scores: { compete: 10, collab: 2, compromise: 1, avoid: 0, accommodate: 0 },
+          insight: "В совместной работе ты берешь на себя роль уверенного лидера и настойчиво продвигаешь продуманный план."
+        },
+        {
+          letter: "Б",
+          text: "Предложу обсудить варианты и распределить задачи так, чтобы учесть возможности и мнение каждого.",
+          style: "collab",
+          scores: { collab: 10, compromise: 3, accommodate: 1, compete: 1, avoid: 0 },
+          insight: "В групповых проектах ты выступаешь сильным организатором — стремишься раскрыть возможности каждого и объединить команду."
+        },
+        {
+          letter: "В",
+          text: "Предложу разделить спорную часть работы или поменяться задачами, чтобы всем было удобно.",
+          style: "compromise",
+          scores: { compromise: 10, collab: 3, accommodate: 2, compete: 0, avoid: 0 },
+          insight: "В командной работе ты прагматичен — легко делишь спорные обязанности поровну ради соблюдения общего дедлайна."
+        },
+        {
+          letter: "Г",
+          text: "Перестану спорить и просто выполню ту часть, которая была поручена мне.",
+          style: "avoid",
+          scores: { avoid: 10, compromise: 2, accommodate: 2, compete: 0, collab: 0 },
+          insight: "В совместных делах ты ценишь автономию: дистанцируешься от организационных споров и качественно делаешь свой участок."
+        },
+        {
+          letter: "Д",
+          text: "Соглашусь с остальными, даже если мой вариант мне нравится больше.",
+          style: "accommodate",
+          scores: { accommodate: 10, compromise: 3, avoid: 2, collab: 1, compete: 0 },
+          insight: "Ради согласия и доброжелательности в команде ты готов уступить первенство другим идеям."
+        }
       ]
     },
     {
-      q: "3. Учитель поставил спорную оценку, с которой ты не согласен:",
+      id: 3,
+      topic: "В отношениях с учителями",
+      q: "3. Тебе поставили оценку, с которой совсем не согласен.",
       options: [
-        { text: "Буду настойчиво спорить на уроке или сразу пойду жаловаться к руководству", style: "compete", letter: "A" },
-        { text: "После урока вежливо спрошу критерии и как доработать работу", style: "collab", letter: "B" },
-        { text: "Договорюсь о пересдаче или подготовке дополнительного доклада", style: "compromise", letter: "C" },
-        { text: "Махну рукой: спорить с учителем бесполезно и себе дороже", style: "avoid", letter: "D" },
-        { text: "Смирюсь молча, решив, что учитель всегда прав", style: "accommodate", letter: "E" }
+        {
+          letter: "А",
+          text: "Сразу скажу, что считаю оценку несправедливой, и буду объяснять свою позицию.",
+          style: "compete",
+          scores: { compete: 10, collab: 2, compromise: 1, avoid: 0, accommodate: 0 },
+          insight: "В диалоге со взрослыми ты не боишься открыто защищать справедливость и аргументировать качество своего труда."
+        },
+        {
+          letter: "Б",
+          text: "После урока подойду к учителю и спрошу, что повлияло на оценку и можно ли что-то исправить.",
+          style: "collab",
+          scores: { collab: 10, compromise: 3, accommodate: 1, compete: 1, avoid: 0 },
+          insight: "В учебных вопросах ты действуешь дипломатично — выясняешь критерии наедине и ищешь пути улучшения знаний."
+        },
+        {
+          letter: "В",
+          text: "Попробую договориться о пересмотре оценки или дополнительном задании.",
+          style: "compromise",
+          scores: { compromise: 10, collab: 3, compete: 1, accommodate: 1, avoid: 0 },
+          insight: "В спорных учебных моментах ты нацелен на конструктивный компромисс — предлагаешь исправить балл делом и подготовкой."
+        },
+        {
+          letter: "Г",
+          text: "Решу не спорить и оставлю всё как есть.",
+          style: "avoid",
+          scores: { avoid: 10, accommodate: 2, compromise: 1, compete: 0, collab: 0 },
+          insight: "Ты бережёшь внутренний ресурс: если ситуация с оценкой не фатальна, предпочитаешь не тратить нервы на споры."
+        },
+        {
+          letter: "Д",
+          text: "Приму оценку, даже если внутри останется чувство несправедливости, лишь бы не начинать неприятный разговор.",
+          style: "accommodate",
+          scores: { accommodate: 10, avoid: 3, compromise: 1, compete: 0, collab: 0 },
+          insight: "Ты сдерживаешь эмоции перед школьным авторитетом, выбирая внешнее спокойствие взамен риска напряжённости с учителем."
+        }
       ]
     },
     {
-      q: "4. Близкий друг случайно выдал твой секрет другим ребятам:",
+      id: 4,
+      topic: "В дружбе и доверии",
+      q: "4. Оказалось, что друг рассказал другим то, чем ты делился с ним лично.",
       options: [
-        { text: "Сразу прекращу общение и выскажу всё самое резкое прямо в лицо", style: "compete", letter: "A" },
-        { text: "Поговорю начистоту: объясню свои чувства и спрошу, почему он так поступил", style: "collab", letter: "B" },
-        { text: "Попрошу его публично опровергнуть слух, и тогда забудем инцидент", style: "compromise", letter: "C" },
-        { text: "Сделаю вид, что всё нормально, но перестану доверять и отдалюсь", style: "avoid", letter: "D" },
-        { text: "Прощу сразу, сделав вид, что мне совсем не обидно", style: "accommodate", letter: "E" }
+        {
+          letter: "А",
+          text: "Сразу скажу, что мне это не подходит, и попрошу объяснить, почему так произошло.",
+          style: "compete",
+          scores: { compete: 10, collab: 2, compromise: 1, avoid: 0, accommodate: 0 },
+          insight: "В близких отношениях ты предельно честен — не замалчиваешь обиды и сразу твёрдо выставляешь границы допустимого."
+        },
+        {
+          letter: "Б",
+          text: "Поговорю с другом лично: расскажу, что меня задело, и постараюсь понять, почему так произошло.",
+          style: "collab",
+          scores: { collab: 10, compromise: 2, accommodate: 2, compete: 1, avoid: 0 },
+          insight: "В дружбе ты демонстрируешь эмоциональную зрелость — открыто говоришь о чувствах без агрессии и выслушиваешь позицию друга."
+        },
+        {
+          letter: "В",
+          text: "Предложу подумать, как можно исправить ситуацию и что делать дальше.",
+          style: "compromise",
+          scores: { compromise: 10, collab: 3, accommodate: 2, compete: 0, avoid: 0 },
+          insight: "При нарушении доверия ты фокусируешься на решении проблемы и исправлении последствий, не застревая в обиде."
+        },
+        {
+          letter: "Г",
+          text: "Не стану выяснять отношения, но некоторое время буду держаться подальше.",
+          style: "avoid",
+          scores: { avoid: 10, compete: 2, compromise: 1, accommodate: 1, collab: 0 },
+          insight: "При уязвимости твоя психологическая защита — взять паузу, отдалиться и дать себе время спокойно всё переварить."
+        },
+        {
+          letter: "Д",
+          text: "Постараюсь быстро всё забыть и сохранить отношения, даже если мне всё ещё неприятно.",
+          style: "accommodate",
+          scores: { accommodate: 10, compromise: 3, avoid: 2, collab: 1, compete: 0 },
+          insight: "Ты исключительно ценишь дружбу и готов перешагнуть через личную обиду ради сохранения связи с человеком."
+        }
       ]
     },
     {
-      q: "5. В классном чате разгорается конфликт между одноклассниками:",
+      id: 5,
+      topic: "В коллективе и спорах в классе",
+      q: "5. В классе или общем чате начинается серьёзный спор.",
       options: [
-        { text: "Вмешаюсь и жестко докажу правоту своей стороны", style: "compete", letter: "A" },
-        { text: "Предложу всем снизить градус и найти мирное решение спора", style: "collab", letter: "B" },
-        { text: "Предложу сойтись на нейтральном варианте, устраивающем большинство", style: "compromise", letter: "C" },
-        { text: "Выключу уведомления в чате или сразу выйду из него", style: "avoid", letter: "D" },
-        { text: "Поддержу большинство, даже если в душе не совсем согласен", style: "accommodate", letter: "E" }
+        {
+          letter: "А",
+          text: "Выскажу своё мнение и постараюсь убедить остальных в своей позиции.",
+          style: "compete",
+          scores: { compete: 10, collab: 2, compromise: 1, avoid: 0, accommodate: 0 },
+          insight: "В групповых баталиях ты не остаешься безучастным — смело включаешься в диалог и открыто отстаиваешь свои взгляды."
+        },
+        {
+          letter: "Б",
+          text: "Попробую выслушать участников и помочь найти решение, с которым смогут согласиться все.",
+          style: "collab",
+          scores: { collab: 10, compromise: 3, accommodate: 2, compete: 0, avoid: 0 },
+          insight: "В коллективе у тебя сильна роль природного медиатора — ты умеешь слушать обе стороны и помогаешь прийти к согласию."
+        },
+        {
+          letter: "В",
+          text: "Предложу вариант, который позволит обеим сторонам немного уступить и закончить спор.",
+          style: "compromise",
+          scores: { compromise: 10, collab: 3, accommodate: 2, compete: 0, avoid: 0 },
+          insight: "В разгаре спора ты выступаешь голосом разума — вовремя предлагаешь компромиссную середину до перехода на личности."
+        },
+        {
+          letter: "Г",
+          text: "Не стану вмешиваться и займусь своими делами.",
+          style: "avoid",
+          scores: { avoid: 10, accommodate: 1, compromise: 1, compete: 0, collab: 0 },
+          insight: "Ты умеешь фильтровать чужой эмоциональный шум и не тратишь силы на бессмысленные групповые ссоры."
+        },
+        {
+          letter: "Д",
+          text: "Поддержу одну из сторон, даже если остаются сомнения по поводу этой позиции.",
+          style: "accommodate",
+          scores: { accommodate: 10, compromise: 2, avoid: 2, compete: 1, collab: 0 },
+          insight: "В групповых конфликтах тебе важна командная солидарность и поддержка коллектива."
+        }
       ]
     }
   ],
   results: {
     collab: {
-      title: "СОТРУДНИЧЕСТВО (ПАРТНЕРСТВО)",
-      badge: "🤝 СТРАТЕГИЯ ЛИДЕРА И МЕДИАТОРА",
+      name: "Сотрудничество",
+      title: "СОТРУДНИЧЕСТВО",
+      badge: "🤝 СТРАТЕГИЯ ВЗАИМНОГО ВЫИГРЫША",
       icon: "./images/icons/handshake.png",
-      desc: "Ты стремишься не просто «замять» ссору, а понять истинные мотивы второй стороны и найти решение, где выигрывают оба (Win-Win). Это самый зрелый и уважительный стиль общения в школе.",
-      strengths: "Высокий авторитет, умение слушать без обиды, способность сохранять дружбу при разногласиях.",
-      tips: "Помни, что сотрудничество требует времени. Если оппонент агрессивен и пока не готов к диалогу, сначала четко обозначь свои личные границы."
+      color: "#0b4d50",
+      desc: "В конфликтной ситуации важно не просто закончить спор, а разобраться, что произошло, и найти решение, которое учитывает интересы обеих сторон.",
+      helps: "умение слушать, задавать вопросы и спокойно обсуждать даже неприятные темы.",
+      watch: "иногда желание всё выяснить сразу только усиливает напряжение. Если разговор уже превращается в спор, полезно сделать паузу.",
+      actions: "если конфликт начался в общем чате, не обязательно продолжать его там. Предложи обсудить ситуацию лично или один на один. Сначала выслушай другую сторону, а потом расскажи, что именно тебя задело."
     },
     compromise: {
-      title: "КОМПРОМИСС (ЗОЛОТАЯ СЕРЕДИНА)",
-      badge: "⚖️ ДИПЛОМАТИЧЕСКИЙ БАЛАНС",
+      name: "Компромисс",
+      title: "КОМПРОМИСС",
+      badge: "⚖️ ПОИСК ОБЩЕГО СОГЛАСИЯ",
       icon: "./images/icons/scales.png",
-      desc: "Ты мастер взаимных уступок. Ты быстро гасишь пламя конфликта, предлагая вариант «ни тебе, ни мне» или «пополам». С тобой легко договариваться.",
-      strengths: "Быстрое снятие напряжения, сохранение мира в классе, практичность.",
-      tips: "Следи, чтобы постоянные уступки не ущемляли твои базовые интересы. Иногда полезно глубже прояснить потребности сторон, переходя к сотрудничеству."
+      color: "#2a8084",
+      desc: "Когда мнения расходятся, часто выбирается вариант, который позволяет договориться и двигаться дальше.",
+      helps: "умение учитывать интересы других и находить решение, которое подходит участникам ситуации.",
+      watch: "не нужно соглашаться на всё только ради того, чтобы спор закончился. Важно понимать, с чем действительно можно уступить, а что для тебя принципиально.",
+      actions: "если вы спорите из-за проекта, места в команде, планов с друзьями или общего решения, предложи несколько вариантов и вместе выберите тот, который устроит всех настолько, насколько это возможно."
     },
     compete: {
-      title: "СОПЕРНИЧЕСТВО (НАСТОЙЧИВОСТЬ)",
-      badge: "🔥 СИЛЬНАЯ ВОЛЯ И ГРАНИЦЫ",
+      name: "Соперничество",
+      title: "СОПЕРНИЧЕСТВО",
+      badge: "🔥 ТВЁРДАЯ ЗАЩИТА СВОЕЙ ПОЗИЦИИ",
       icon: "./images/icons/conflict_angry.png",
-      desc: "Ты уверенно защищаешь свои интересы и не даешь себя в обиду. У тебя есть внутренний стержень, смелость и лидерская решительность.",
-      strengths: "Умение постоять за себя, защита личных границ, решительность в стрессе.",
-      tips: "Постоянная борьба утомляет и может создавать лишних недоброжелателей. Попробуй проявлять эмпатию и слышать мотивы других ребят — это сделает тебя еще сильнее."
+      color: "#c0392b",
+      desc: "Если ситуация кажется несправедливой, возникает желание сказать об этом прямо и отстоять свою позицию.",
+      helps: "умение защищать свои интересы и говорить о том, что тебе не подходит.",
+      watch: "когда разговор становится слишком резким, собеседник может перестать слышать саму суть проблемы.",
+      actions: "если тебя задели в классе, чате или компании, говори о конкретной ситуации, а не о человеке. Например: «Мне неприятно, когда так шутят в мой адрес». Это помогает обозначить границу без нового конфликта."
     },
     avoid: {
-      title: "ИЗБЕГАНИЕ (ДИСТАНЦИРОВАНИЕ)",
-      badge: "🛡️ СБЕРЕЖЕНИЕ СИЛ И ПАУЗА",
+      name: "Избегание",
+      title: "ИЗБЕГАНИЕ",
+      badge: "🛡️ ДИСТАНЦИРОВАНИЕ И СБЕРЕЖЕНИЕ СИЛ",
       icon: "./images/icons/padlock.png",
-      desc: "Ты предпочитаешь не вступать в пустые перепалки и сохранять душевное спокойствие, держась в стороне от школьных интриг и сплетен.",
-      strengths: "Эмоциональная устойчивость, отсутствие бессмысленных драк и конфликтов на пустом месте.",
-      tips: "Избегание идеально при пустых провокациях. Но если нарушают твои права или есть угроза буллинга — не молчи, привлекай службу медиации или взрослых."
+      color: "#5c6b73",
+      desc: "Не каждый конфликт кажется достойным внимания. Иногда хочется отойти в сторону, успокоиться и не тратить силы на спор.",
+      helps: "умение не ввязываться в каждую перепалку и понимать, когда спор действительно не стоит твоего внимания.",
+      watch: "если неприятная ситуация повторяется, молчание может только оставить проблему нерешённой.",
+      actions: "если спор идёт в общем чате и только набирает обороты, не обязательно отвечать сразу. Можно выйти из разговора, отключить уведомления и вернуться к ситуации позже. Но если тебя постоянно задевают, исключают из компании, распространяют о тебе неприятную информацию или нарушают твои границы — не оставайся с этим один на один и обратись за помощью."
     },
     accommodate: {
-      title: "ПРИСПОСОБЛЕНИЕ (МИРОТВОРЕЦ)",
-      badge: "🕊️ ЗАБОТА ОБ ОТНОШЕНИЯХ",
+      name: "Приспособление",
+      title: "ПРИСПОСОБЛЕНИЕ",
+      badge: "🕊️ СОХРАНЕНИЕ МИРА И ОТНОШЕНИЙ",
       icon: "./images/icons/two_people.png",
-      desc: "Для тебя важнее всего мир и добрые отношения с окружающими. Ты умеешь сопереживать, прощать и сглаживать любые острые углы.",
-      strengths: "Доброта, глубокая эмпатия, способность объединять людей.",
-      tips: "Твои чувства, желания и комфорт не менее важны, чем чужие! Учись говорить твердое спокойное «нет», когда нарушают твои личные границы."
+      color: "#4a7c59",
+      desc: "В конфликте большое значение имеют отношения и спокойствие между людьми. Поэтому иногда проще уступить, чем продолжать спор.",
+      helps: "умение учитывать чувства других, поддерживать дружеские отношения и не превращать каждое разногласие в серьёзный конфликт.",
+      watch: "постоянные уступки могут привести к ощущению, что твоё мнение никому не важно.",
+      actions: "если друзья выбирают место, игру, фильм или план на выходные, уступить иногда действительно проще. Но если речь идёт о том, что тебя задевает или нарушает твои границы, важно сказать об этом прямо и спокойно."
     }
   }
 };
@@ -411,8 +593,45 @@ function handleScreenshotUpload(input) {
 }
 
 // =====================================================================
-// МОДУЛЬ ПСИХОЛОГИЧЕСКОГО ТЕСТА
+// МОДУЛЬ ПСИХОЛОГИЧЕСКОГО ТЕСТА (СИНТЕЗ И МНОГОМЕРНЫЙ АНАЛИЗ)
 // =====================================================================
+function getStyleCombinationText(primary, secondary) {
+  const combos = {
+    'collab+compromise': 'Ты прирождённый дипломат: стремишься к взаимовыгодным решениям (Win-Win), а при нехватке времени быстро находишь устраивающий всех компромисс.',
+    'collab+compete': 'Уверенное лидерство: у тебя есть внутренний стержень защищать свои границы, но ты открыт к уважительному диалогу и поиску честного согласия.',
+    'collab+avoid': 'Мудрый баланс: ты глубоко решаешь действительно важные вопросы, но умеешь не распылять силы на пустые провокации.',
+    'collab+accommodate': 'Чуткий миротворец: искренне заботишься об отношениях и гармонии в коллективе, умея слушать каждого участника.',
+    'compromise+collab': 'Мастер договорённостей: всегда нацелен на практичный баланс, стараясь сохранить хорошие отношения со всеми участниками.',
+    'compromise+compete': 'Прагматичный переговорщик: уверенно обозначаешь свои интересы, но готов идти на честные взаимные уступки ради результата.',
+    'compromise+avoid': 'Хранитель спокойствия: решаешь спорные моменты быстро и нейтрально, не допуская лишней драмы и споров.',
+    'compromise+accommodate': 'Гибкий миротворец: легко сглаживаешь острые углы и помогаешь людям договориться без скандалов.',
+    'compete+collab': 'Сильный и справедливый характер: твёрдо стоишь на своём, но готов услышать разумные аргументы второй стороны.',
+    'compete+compromise': 'Решительный реалист: знаешь цену своим интересам и готов сойтись на разумной середине, если это выгодно делу.',
+    'compete+avoid': 'Избирательная защита: не вступаешь в мелкие ссоры, но при нарушении важных границ даёшь чёткий и твёрдый отпор.',
+    'compete+accommodate': 'Чуткий защитник: твёрд в принципиальных вопросах, но способен на искреннюю уступку ради близких друзей.',
+    'avoid+collab': 'Вдумчивый наблюдатель: берёшь паузу, чтобы остыть, а затем готов спокойно и наедине обсудить разногласия.',
+    'avoid+compromise': 'Рациональное дистанцирование: бережёшь нервы от пустых баталий, выбирая самый быстрый и нейтральный выход из споров.',
+    'avoid+accommodate': 'Миролюбивый покой: ценишь душевный комфорт и добрые отношения превыше сиюминутной победы в споре.',
+    'avoid+compete': 'Сдержанная сила: долго игнорируешь мелкие выпады, но если провокации переходят черту — готов жёстко обозначить границу.',
+    'accommodate+collab': 'Глубокий эмпат: понимаешь мотивы других людей и искренне стремишься к общему согласию в классе.',
+    'accommodate+compromise': 'Дипломатическая доброта: готов сделать шаг навстречу первым, чтобы сохранить дружбу и мир вокруг.',
+    'accommodate+avoid': 'Бережный хранитель мира: избегаешь обострения конфликтов и ценишь доброе отношение окружающих.',
+    'accommodate+compete': 'Неожиданная твёрдость: обычно мягок и уступчив, но когда дело касается самого важного — проявляешь твёрдую волю.'
+  };
+
+  const key = `${primary}+${secondary}`;
+  return combos[key] || 'У тебя многогранный стиль: ты гибко подстраиваешься под ситуацию, сочетая твердость в защите своих интересов с дипломатичностью.';
+}
+
+function startPsychTest() {
+  triggerHaptic('light');
+  state.psychTest.started = true;
+  state.psychTest.currentQ = 0;
+  state.psychTest.answers = [];
+  state.psychTest.completed = false;
+  renderPsychTest();
+}
+
 function renderPsychTest() {
   const container = document.getElementById('psychTestContainer');
   if (!container) return;
@@ -422,15 +641,34 @@ function renderPsychTest() {
     return;
   }
 
+  // Интро-экран перед началом теста
+  if (!state.psychTest.started) {
+    container.innerHTML = `
+      <div class="test-intro-card">
+        <span class="test-intro-badge">📋 ПСИХОЛОГИЧЕСКИЙ ТЕСТ</span>
+        <h2 class="test-intro-title">${PSYCH_TEST.title}</h2>
+        <div class="test-intro-body">
+          <p>${PSYCH_TEST.intro.lead}</p>
+          <p>${PSYCH_TEST.intro.body.replace(/\n\n/g, '</p><p>')}</p>
+          <div class="test-intro-note">
+            <span>✨ ${PSYCH_TEST.intro.note}</span>
+          </div>
+        </div>
+        <button class="btn-primary-glow" onclick="startPsychTest()">НАЧАТЬ ТЕСТ (5 СИТУАЦИЙ) →</button>
+      </div>
+    `;
+    return;
+  }
+
   const qIndex = state.psychTest.currentQ;
   const question = PSYCH_TEST.questions[qIndex];
   const total = PSYCH_TEST.questions.length;
-  const progressPercent = Math.round(((qIndex) / total) * 100);
+  const progressPercent = Math.round(((qIndex + 1) / total) * 100);
 
   let optionsHtml = '';
-  question.options.forEach((opt) => {
+  question.options.forEach((opt, idx) => {
     optionsHtml += `
-      <button class="test-opt-btn" onclick="answerPsychQuestion('${opt.style}')">
+      <button class="test-opt-btn" onclick="answerPsychQuestion(${idx})">
         <span class="test-opt-letter">${opt.letter}</span>
         <span class="test-opt-text">${opt.text}</span>
       </button>
@@ -441,7 +679,7 @@ function renderPsychTest() {
     <div class="test-header-wrap">
       <div class="test-badge-row">
         <span class="test-main-badge">${PSYCH_TEST.title}</span>
-        <span class="test-q-counter">Вопрос ${qIndex + 1} из ${total}</span>
+        <span class="test-q-counter">Ситуация ${qIndex + 1} из ${total}</span>
       </div>
       <div class="test-progress-bar-bg">
         <div class="test-progress-bar-fill" style="width: ${progressPercent}%"></div>
@@ -449,6 +687,7 @@ function renderPsychTest() {
     </div>
 
     <div class="test-question-box">
+      <div class="test-question-topic">${question.topic}</div>
       <div class="test-question-title">${question.q}</div>
     </div>
 
@@ -458,9 +697,20 @@ function renderPsychTest() {
   `;
 }
 
-function answerPsychQuestion(style) {
+function answerPsychQuestion(optIndex) {
   triggerHaptic('medium');
-  state.psychTest.answers.push(style);
+  const q = PSYCH_TEST.questions[state.psychTest.currentQ];
+  const opt = q.options[optIndex];
+
+  state.psychTest.answers.push({
+    qId: q.id,
+    topic: q.topic,
+    letter: opt.letter,
+    text: opt.text,
+    style: opt.style,
+    scores: opt.scores,
+    insight: opt.insight
+  });
 
   if (state.psychTest.currentQ + 1 < PSYCH_TEST.questions.length) {
     state.psychTest.currentQ += 1;
@@ -475,46 +725,126 @@ function renderPsychResult() {
   const container = document.getElementById('psychTestContainer');
   if (!container) return;
 
-  // Считаем стиль большинства
-  const counts = { compete: 0, collab: 0, compromise: 0, avoid: 0, accommodate: 0 };
-  state.psychTest.answers.forEach(st => {
-    if (counts[st] !== undefined) counts[st]++;
+  // 1. Подсчет баллов по 5 шкалам
+  const totals = { compete: 0, collab: 0, compromise: 0, avoid: 0, accommodate: 0 };
+  state.psychTest.answers.forEach(ans => {
+    if (ans.scores) {
+      for (const [st, val] of Object.entries(ans.scores)) {
+        totals[st] = (totals[st] || 0) + val;
+      }
+    }
   });
 
-  let maxStyle = 'collab';
-  let maxCount = -1;
-  for (const [st, count] of Object.entries(counts)) {
-    if (count > maxCount) {
-      maxCount = count;
-      maxStyle = st;
-    }
+  const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0) || 1;
+  const percentages = {};
+  for (const [st, val] of Object.entries(totals)) {
+    percentages[st] = Math.round((val / grandTotal) * 100);
   }
 
-  const resultData = PSYCH_TEST.results[maxStyle] || PSYCH_TEST.results.collab;
+  // 2. Сортировка: определяем ведущий и второй стиль
+  const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  const primaryKey = sorted[0][0];
+  const secondaryKey = sorted[1][0];
+
+  const primaryData = PSYCH_TEST.results[primaryKey] || PSYCH_TEST.results.collab;
+  const secondaryData = PSYCH_TEST.results[secondaryKey] || PSYCH_TEST.results.compromise;
+
+  const comboText = getStyleCombinationText(primaryKey, secondaryKey);
+
+  // 3. Формирование визуальной шкалы стилей
+  const styleDisplayOrder = ['collab', 'compromise', 'compete', 'avoid', 'accommodate'];
+  const barsHtml = styleDisplayOrder.map(key => {
+    const sData = PSYCH_TEST.results[key];
+    const pct = percentages[key] || 0;
+    const isLeading = key === primaryKey;
+    return `
+      <div class="test-bar-item">
+        <div class="test-bar-meta">
+          <span class="test-bar-name">${sData.badge.split(' ')[0]} ${sData.name} ${isLeading ? '⭐ (ведущий)' : ''}</span>
+          <span class="test-bar-pct">${pct}%</span>
+        </div>
+        <div class="test-bar-track">
+          <div class="test-bar-fill" style="width: ${pct}%; background: ${sData.color};"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 4. Формирование персонализированного портрета по 5 ситуациям
+  const situationsHtml = state.psychTest.answers.map(ans => `
+    <div class="test-sit-item">
+      <div class="test-sit-header">📍 ${ans.topic}</div>
+      <div class="test-sit-insight">«${ans.insight}»</div>
+      <div class="test-sit-choice">Твой выбор: <strong>${ans.letter}.</strong> ${ans.text}</div>
+    </div>
+  `).join('');
 
   container.innerHTML = `
     <div class="test-result-card">
-      <div class="test-result-icon-wrap">
-        <img src="${resultData.icon}" class="test-result-icon" alt="">
-      </div>
-      <span class="test-result-badge">${resultData.badge}</span>
-      <h3 class="test-result-title">${resultData.title}</h3>
-
-      <div class="test-result-desc">
-        ${resultData.desc}
+      
+      <!-- Дисклеймер от медиатора -->
+      <div class="test-disclaimer-card">
+        <span class="disclaimer-icon">💡</span>
+        <p class="disclaimer-text">${PSYCH_TEST.disclaimer}</p>
       </div>
 
-      <div class="test-result-extra">
-        <div class="test-extra-item">
-          <strong>💪 Твоя сильная сторона:</strong> ${resultData.strengths}
+      <!-- Карточка ведущего стиля -->
+      <div class="test-result-hero">
+        <div class="test-result-icon-wrap">
+          <img src="${primaryData.icon}" class="test-result-icon" alt="">
         </div>
-        <div class="test-extra-item">
-          <strong>💡 Совет школьного медиатора:</strong> ${resultData.tips}
+        <span class="test-result-badge">${primaryData.badge}</span>
+        <h2 class="test-result-title">${primaryData.title}</h2>
+        <div class="test-result-lead-desc">
+          ${primaryData.desc}
         </div>
       </div>
 
+      <!-- Баланс всех 5 стилей -->
+      <div class="test-bars-card">
+        <h4 class="test-card-header">📊 ТВОЙ БАЛАНС СТИЛЕЙ В КОНФЛИКТАХ</h4>
+        <div class="test-bars-list">
+          ${barsHtml}
+        </div>
+      </div>
+
+      <!-- Сочетание ведущего и вспомогательного стилей -->
+      <div class="test-combo-card">
+        <div class="combo-title-row">
+          <span class="combo-icon">🧩</span>
+          <span class="combo-title">Ведущий стиль <strong>${primaryData.name}</strong> + вспомогательный <strong>${secondaryData.name}</strong></span>
+        </div>
+        <p class="combo-text">${comboText}</p>
+      </div>
+
+      <!-- Разбор 5 жизненных ситуаций -->
+      <div class="test-situations-card">
+        <h4 class="test-card-header">📌 ТВОЙ ПОРТРЕТ ПО 5 ШКОЛЬНЫМ СИТУАЦИЯМ</h4>
+        <div class="test-sit-list">
+          ${situationsHtml}
+        </div>
+      </div>
+
+      <!-- 3 Ключевые рекомендации медиатора -->
+      <div class="test-recs-card">
+        <h4 class="test-card-header">🧭 ПРАКТИЧЕСКИЕ ОРИЕНТИРЫ ДЛЯ ТЕБЯ</h4>
+        <div class="test-rec-block rec-helps">
+          <div class="rec-title">✨ Что может помогать:</div>
+          <div class="rec-text">${primaryData.helps}</div>
+        </div>
+        <div class="test-rec-block rec-watch">
+          <div class="rec-title">⚠️ На что стоит обратить внимание:</div>
+          <div class="rec-text">${primaryData.watch}</div>
+        </div>
+        <div class="test-rec-block rec-actions">
+          <div class="rec-title">🎯 Что можно сделать на практике:</div>
+          <div class="rec-text">${primaryData.actions}</div>
+        </div>
+      </div>
+
+      <!-- Кнопки действий -->
       <div class="test-result-actions">
-        <button class="btn-primary" onclick="startMediatorChatPrompt('У меня по тесту стиль «${resultData.title}». Как мне разрешить ситуацию?')">
+        <button class="btn-primary" onclick="startMediatorChatPrompt('У меня по психологическому тесту ведущий стиль «${primaryData.title}». Помоги разобрать мою текущую ситуацию с учетом этого.')">
           РАЗОБРАТЬ СИТУАЦИЮ С МЕДИАТОРОМ
         </button>
         <button class="btn-secondary" onclick="resetPsychTest()">
@@ -527,6 +857,7 @@ function renderPsychResult() {
 
 function resetPsychTest() {
   triggerHaptic('light');
+  state.psychTest.started = false;
   state.psychTest.currentQ = 0;
   state.psychTest.answers = [];
   state.psychTest.completed = false;
