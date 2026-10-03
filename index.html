@@ -8,7 +8,7 @@
   <script src="./vk-bridge.js"></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1789860000">
+  <link rel="stylesheet" href="./style.css?v=1789870000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -71,15 +71,12 @@
             <div class="chat-messages" id="chatMessages">
               <div class="msg bot-msg">
                 <div class="bubble">
-                  👋 <strong>Привет! Я твой школьный медиатор.</strong><br><br>
-                  Помогаю спокойно и конфиденциально разобраться в любой трудной ситуации со сверстниками, учителями или близкими.<br><br>
-                  Расскажи своими словами, что произошло?
+                  👋 <strong>Привет! Я школьный медиатор.</strong><br><br>
+                  Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
+                  Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
                 </div>
               </div>
             </div>
-
-            <!-- Подсказки быстрых фраз -->
-            <div class="chat-suggestions" id="chatSuggestions"></div>
 
             <!-- Панель ввода чата -->
             <div class="chat-input-bar">
@@ -111,35 +108,35 @@
 
             <!-- Шаг 1: Оппонент -->
             <div id="wizardStep1" class="wizard-step-content active">
-              <h3 class="step-title">С КЕМ ВОЗНИК СПОР ИЛИ ТРУДНАЯ СИТУАЦИЯ?</h3>
-              <p class="step-desc">Выбери, чье поведение вызывает напряжение:</p>
+              <h3 class="step-title">1. С кем возникла трудная ситуация?</h3>
+              <p class="step-desc">Выбери, с кем возник спор или другая неприятная ситуация:</p>
               <div class="option-cards-grid">
-                <button class="option-card active" onclick="selectWizardOption('opponent', 'Одноклассник / сверстник', this)">
+                <button class="option-card active" onclick="selectWizardOption('opponent', 'Одноклассник', this)">
                   <img src="./images/icons/student_boy.png" class="opt-icon-img" alt="Одноклассник">
                   <div class="opt-text-wrap">
                     <span class="opt-title">ОДНОКЛАССНИК</span>
-                    <span class="opt-sub">Сверстник, знакомый из параллели</span>
+                    <span class="opt-sub">Одноклассник, знакомый или кто-то из школы</span>
                   </div>
                 </button>
-                <button class="option-card" onclick="selectWizardOption('opponent', 'Учитель / преподаватель', this)">
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Учитель', this)">
                   <img src="./images/icons/document_pen.png" class="opt-icon-img" alt="Учитель">
                   <div class="opt-text-wrap">
                     <span class="opt-title">УЧИТЕЛЬ</span>
-                    <span class="opt-sub">Завуч, предметник, классный руководитель</span>
+                    <span class="opt-sub">Учитель, классный руководитель или другой сотрудник школы</span>
                   </div>
                 </button>
-                <button class="option-card" onclick="selectWizardOption('opponent', 'Родители / родственники', this)">
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Родители', this)">
                   <img src="./images/icons/family.png" class="opt-icon-img" alt="Родители">
                   <div class="opt-text-wrap">
                     <span class="opt-title">РОДИТЕЛИ</span>
-                    <span class="opt-sub">Мама, папа, опекуны, старшие</span>
+                    <span class="opt-sub">Мама, папа, опекун или другой близкий взрослый</span>
                   </div>
                 </button>
-                <button class="option-card" onclick="selectWizardOption('opponent', 'Близкий друг / подруга', this)">
+                <button class="option-card" onclick="selectWizardOption('opponent', 'Друг / подруга', this)">
                   <img src="./images/icons/handshake.png" class="opt-icon-img" alt="Друг">
                   <div class="opt-text-wrap">
                     <span class="opt-title">ДРУГ / ПОДРУГА</span>
-                    <span class="opt-sub">Обида, предательство, недопонимание</span>
+                    <span class="opt-sub">Дружба, обида, ссора или недопонимание</span>
                   </div>
                 </button>
               </div>
@@ -150,28 +147,43 @@
 
             <!-- Шаг 2: Категория -->
             <div id="wizardStep2" class="wizard-step-content">
-              <h3 class="step-title">В ЧЕМ ГЛАВНАЯ СУТЬ ПРОБЛЕМЫ?</h3>
-              <p class="step-desc">Определи сферу разногласий:</p>
+              <h3 class="step-title">2. Что произошло?</h3>
+              <p class="step-desc">Что именно стало причиной конфликта?</p>
               <div class="category-pills">
-                <button class="cat-pill active" onclick="selectWizardOption('category', 'Травля / подколы в классе или чате', this)">
+                <button class="cat-pill active" onclick="selectWizardOption('category', 'Травля / буллинг', this)">
                   <img src="./images/icons/conflict_angry.png" class="cat-pill-img" alt="Буллинг">
-                  <span>ТРАВЛЯ / БУЛЛИНГ В ЧАТЕ</span>
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">ТРАВЛЯ / БУЛЛИНГ</span>
+                    <span class="opt-sub">Обидные слова, насмешки, исключение из компании</span>
+                  </div>
                 </button>
-                <button class="cat-pill" onclick="selectWizardOption('category', 'Спор из-за оценок или домашних заданий', this)">
-                  <img src="./images/icons/scales.png" class="cat-pill-img" alt="Оценка">
-                  <span>НЕСПРАВЕДЛИВАЯ ОЦЕНКА / СПОР</span>
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Спор / несправедливость', this)">
+                  <img src="./images/icons/scales.png" class="cat-pill-img" alt="Спор">
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">СПОР / НЕСПРАВЕДЛИВОСТЬ</span>
+                    <span class="opt-sub">Разные мнения, ссора или ощущение, что с тобой поступили несправедливо</span>
+                  </div>
                 </button>
-                <button class="cat-pill" onclick="selectWizardOption('category', 'Нарушение личных границ и слухи', this)">
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Личные границы / секреты', this)">
                   <img src="./images/icons/padlock.png" class="cat-pill-img" alt="Границы">
-                  <span>НАРУШЕНИЕ ЛИЧНЫХ ГРАНИЦ / СПЛЕТНИ</span>
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">ЛИЧНЫЕ ГРАНИЦЫ / СЕКРЕТЫ</span>
+                    <span class="opt-sub">Кто-то нарушил твою границу или рассказал то, что не должен был</span>
+                  </div>
                 </button>
-                <button class="cat-pill" onclick="selectWizardOption('category', 'Угрозы, бойкот или давление толпы', this)">
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Бойкот / давление', this)">
                   <img src="./images/icons/two_people.png" class="cat-pill-img" alt="Бойкот">
-                  <span>БОЙКОТ / ДАВЛЕНИЕ ГРУППЫ</span>
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">БОЙКОТ / ДАВЛЕНИЕ</span>
+                    <span class="opt-sub">Тебя игнорируют, исключают из компании или заставляют сделать то, чего ты не хочешь</span>
+                  </div>
                 </button>
-                <button class="cat-pill" onclick="selectWizardOption('category', 'Другая нестандартная ситуация', this)">
+                <button class="cat-pill" onclick="selectWizardOption('category', 'Другая ситуация', this)">
                   <img src="./images/icons/question.png" class="cat-pill-img" alt="Другое">
-                  <span>ДРУГАЯ СИТУАЦИЯ</span>
+                  <div class="opt-text-wrap">
+                    <span class="opt-title">ДРУГАЯ СИТУАЦИЯ</span>
+                    <span class="opt-sub">Не нашёл подходящий вариант</span>
+                  </div>
                 </button>
               </div>
               <div class="step-actions dual">
@@ -182,11 +194,17 @@
 
             <!-- Шаг 3: Описание ситуации -->
             <div id="wizardStep3" class="wizard-step-content">
-              <h3 class="step-title">ОПИШИ, ЧТО ИМЕННО ПРОИЗОШЛО</h3>
-              <p class="step-desc">Пиши простыми словами, как есть. Чем точнее детали, тем практичнее будет совет.</p>
+              <h3 class="step-title">3. Расскажи, что произошло</h3>
+              <p class="step-desc">
+                Опиши ситуацию своими словами — так, как было.<br><br>
+                Можно коротко или подробно. Расскажи, что произошло, кто участвовал и что тебя больше всего беспокоит.<br><br>
+                <strong>Например:</strong><br>
+                «В общем чате надо мной начали смеяться. Я попросил прекратить, но сообщения продолжились. Теперь не знаю, как реагировать завтра в школе».<br><br>
+                По желанию можно прикрепить скриншот переписки.
+              </p>
               
               <div class="textarea-wrap">
-                <textarea id="wizardDesc" rows="5" placeholder="Например: Он обозвал меня перед всеми на перемене, потому что я не дал списать. Все смеялись, я растерялся и промолчал. Теперь не знаю, как завтра зайти в класс..."></textarea>
+                <textarea id="wizardDesc" rows="5" placeholder="Опиши ситуацию своими словами..."></textarea>
               </div>
 
               <div class="upload-box" onclick="document.getElementById('wizardFileInput').click()">
@@ -202,7 +220,7 @@
               <div class="step-actions dual">
                 <button class="btn-secondary" onclick="goToWizardStep(2)">← НАЗАД</button>
                 <button class="btn-primary-glow" id="btnStartAnalysis" onclick="startConflictAnalysis()">
-                  <span>ПОЛУЧИТЬ ПЛАН МЕДИАТОРА</span>
+                  <span>ПОЛУЧИТЬ ПОМОЩЬ</span>
                 </button>
               </div>
             </div>
@@ -248,15 +266,21 @@
               <span class="sos-subtle-title">Экстренная кризисная помощь</span>
               <span class="sos-subtle-tag">Бесплатно • Анонимно • 24/7</span>
             </div>
-            <a href="tel:88002000122" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
-              <span class="phone-icon-mini">📞</span>
-              <span class="phone-number-text">8 (800) 200-01-22</span>
-              <span class="phone-desc-text">Детский телефон доверия</span>
-            </a>
-            <div class="sos-subtle-extra">
-              <span class="extra-service">Спасение: <a href="tel:112">112</a></span>
-              <span class="extra-dot">•</span>
-              <span class="extra-service">МЧС: <a href="tel:+74959895050">+7 (495) 989-50-50</a></span>
+            <div class="sos-subtle-phones-grid">
+              <a href="tel:88002000122" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
+                <div class="sos-btn-lead">
+                  <span class="phone-icon-mini">📞</span>
+                  <span class="phone-number-text">8 (800) 200-01-22</span>
+                </div>
+                <span class="phone-desc-text">Детский телефон доверия</span>
+              </a>
+              <a href="tel:84742284045" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
+                <div class="sos-btn-lead">
+                  <span class="phone-icon-mini">📞</span>
+                  <span class="phone-number-text">8 (4742) 28-40-45</span>
+                </div>
+                <span class="phone-desc-text">Телефон доверия для детей и родителей</span>
+              </a>
             </div>
           </div>
         </div>
@@ -265,6 +289,6 @@
     </main>
   </div>
 
-  <script src="./app.js?v=1789860000"></script>
+  <script src="./app.js?v=1789870000"></script>
 </body>
 </html>

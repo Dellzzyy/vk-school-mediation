@@ -1527,14 +1527,21 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   opacity: 0.85;
 }
 
+.sos-subtle-phones-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .sos-subtle-phone-btn {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   background: rgba(235, 248, 246, 0.75);
   border: 1px solid rgba(11, 77, 80, 0.14);
   border-radius: var(--radius-sm);
-  padding: 9px 12px;
+  padding: 10px 12px;
   text-decoration: none;
   color: inherit;
   transition: all 0.15s ease;
@@ -1544,47 +1551,44 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   background: #e0f4f1;
 }
 
+.sos-btn-lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .phone-icon-mini {
   font-size: 14px;
   opacity: 0.75;
 }
 
 .phone-number-text {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .phone-desc-text {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
-  margin-left: auto;
+  text-align: right;
+  line-height: 1.25;
 }
 
-.sos-subtle-extra {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-muted);
-  padding-top: 2px;
-}
-
-.sos-subtle-extra a {
-  color: var(--text-primary);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.sos-subtle-extra a:hover {
-  text-decoration: underline;
-}
-
-.extra-dot {
-  opacity: 0.4;
+@media (max-width: 380px) {
+  .sos-subtle-phone-btn {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .phone-desc-text {
+    text-align: left;
+    margin-left: 22px;
+  }
 }
 
 /* ================= ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ ================= */

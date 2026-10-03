@@ -13,8 +13,8 @@ const state = {
   assistantMode: 'chat', // 'chat' | 'wizard' | 'test'
   wizard: {
     step: 1,
-    opponent: 'Одноклассник / сверстник',
-    category: 'Травля / подколы в классе или чате',
+    opponent: 'Одноклассник',
+    category: 'Травля / буллинг',
     description: '',
     imageBase64: null,
     imageMime: 'image/jpeg'
@@ -715,22 +715,8 @@ function appendTypingIndicator() {
 }
 
 function renderSuggestions(suggestions) {
-  const container = document.getElementById('chatSuggestions');
-  if (!container) return;
-
-  container.innerHTML = '';
-  if (!suggestions || suggestions.length === 0) return;
-
-  suggestions.forEach(sug => {
-    const pill = document.createElement('button');
-    pill.className = 'sug-pill';
-    pill.textContent = `💡 ${sug}`;
-    pill.onclick = () => {
-      container.innerHTML = '';
-      sendChatMessage(sug);
-    };
-    container.appendChild(pill);
-  });
+  // Quick response buttons removed per user request
+  return;
 }
 
 function clearUnifiedAssistant() {
@@ -741,14 +727,14 @@ function clearUnifiedAssistant() {
     container.innerHTML = `
       <div class="msg bot-msg">
         <div class="bubble">
-          👋 <strong>Привет! Я твой школьный медиатор.</strong><br><br>
-          История очищена. Расскажи спокойно, что произошло или что тебя сейчас беспокоит?
+          👋 <strong>Привет! Я школьный медиатор.</strong><br><br>
+          Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
+          Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
         </div>
       </div>
     `;
   }
   if (sugContainer) sugContainer.innerHTML = '';
-  renderSuggestions(["Ссора с другом", "Спор из-за оценки", "Обидные подколы в чате"]);
   resetWizard();
   resetPsychTest();
 }
