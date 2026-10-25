@@ -1735,8 +1735,9 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .assistant-body-card {
-  background: #ffffff url('./images/bg-block.jpg') no-repeat center center / cover;
+  background: #ffffff url('./images/bg-block.jpg') no-repeat center top / cover;
   border: 1.5px solid var(--border-card);
+  border-top: none;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   padding: 14px;
   box-shadow: 0 6px 20px rgba(11, 77, 80, 0.06);
