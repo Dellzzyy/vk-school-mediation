@@ -17,7 +17,7 @@ const API_BASE = (function() {
     return '';
   }
   // Публичный HTTPS туннель к бэкенду с GigaChat
-  return 'https://42d5ece7222540.lhr.life';
+  return 'https://93e088c4a77b3f.lhr.life';
 })();
 
 // Состояние приложения
