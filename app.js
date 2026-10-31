@@ -6,6 +6,18 @@
 const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
+// Конфигурация API Backend (поддержка прямого вызова GigaChat через HTTPS бэкенд)
+const API_BASE = (function() {
+  const urlParam = new URLSearchParams(window.location.search).get('api');
+  if (urlParam) return urlParam.replace(/\/+$/, '');
+  if (window.APP_API_BASE) return window.APP_API_BASE.replace(/\/+$/, '');
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  // Публичный HTTPS туннель к бэкенду с GigaChat
+  return 'https://854520d7802170.lhr.life';
+})();
+
 // Состояние приложения
 const state = {
   userId: 0,
@@ -345,9 +357,9 @@ function getOfflineReplyClient(userMessage) {
       reply: "🛡️ Травля и обидные подколы — это попытка нарушить твои границы. Главное правило: не показывай бурных эмоций (обидчики ждут слез или крика). Отвечай твердо и спокойно: *«Мне это неинтересно»* или *«Зачем ты это говоришь?»*. Фиксируй скриншоты переписки.",
       suggestions: ["Мастер конфликтов", "Что написать в ответ?", "Пройти тест"]
     };
-  } else if (['учител', 'оценк', 'пара', 'двойк', 'занижа', 'предметник'].some(w => msg.includes(w))) {
+  } else if (['оценк', 'пара', 'двойк', 'занижа'].some(w => msg.includes(w))) {
     return {
-      reply: "📚 В спорах с учителями закон на твоей стороне при вежливом диалоге. Главное: обсуждай работу, а не личность учителя. Скажи: *«Подскажите, пожалуйста, в каких именно критериях я ошибся(лась)? Что нужно доработать, чтобы исправить оценку?»*. Учитель обязан разъяснить критерии.",
+      reply: "📚 Если возник спор из-за оценки, лучше всего спокойно подойти к учителю на перемене и вежливо уточнить: *«Подскажите, пожалуйста, где именно я допустил(а) ошибку и что нужно повторить, чтобы исправить балл?»*.",
       suggestions: ["Как оспорить оценку?", "Поговорить с классным руководителем", "Мастер конфликтов"]
     };
   } else if (['родител', 'мама', 'папа', 'руга', 'дома', 'телефон отбира'].some(w => msg.includes(w))) {
@@ -935,7 +947,7 @@ function handleChatFileUpload(input) {
     const typingBubble = appendTypingIndicator();
 
     try {
-      const res = await fetch('/api/analyze-screenshot', {
+      const res = await fetch(`${API_BASE}/api/analyze-screenshot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -947,14 +959,15 @@ function handleChatFileUpload(input) {
       });
       const data = await res.json();
       if (typingBubble) typingBubble.remove();
-      if (data.ok) {
-        appendChatMessage(data.reply, 'bot');
+      if (data.ok && (data.reply || data.analysis)) {
+        appendChatMessage(data.reply || data.analysis, 'bot');
       } else {
-        appendChatMessage(getOfflineScreenshotAdvice(), 'bot');
+        appendChatMessage('⚠️ Не удалось распознать скриншот. Пожалуйста, отправь текст ситуации в чат своими словами.', 'bot');
       }
     } catch (err) {
       if (typingBubble) typingBubble.remove();
-      appendChatMessage(getOfflineScreenshotAdvice(), 'bot');
+      console.error('Screenshot analysis error:', err);
+      appendChatMessage('⚠️ Ошибка соединения с сервером медиатора. Проверь интернет или отправь текст сообщения вручную.', 'bot');
     }
   };
   reader.readAsDataURL(file);
@@ -986,7 +999,7 @@ async function sendChatMessage(customText = null) {
   const typingBubble = appendTypingIndicator();
 
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -998,7 +1011,7 @@ async function sendChatMessage(customText = null) {
     const data = await res.json();
     if (typingBubble) typingBubble.remove();
 
-    if (data.ok) {
+    if (data.ok && data.reply) {
       triggerHaptic('medium');
       if (['тест', 'тесты', 'псих'].some(w => text.toLowerCase().includes(w))) {
         appendThreeSolutionsMessage();
@@ -1007,24 +1020,14 @@ async function sendChatMessage(customText = null) {
         renderSuggestions(data.suggestions || []);
       }
     } else {
-      const fallback = getOfflineReplyClient(text);
-      if (fallback.isThreeSolutions) {
-        appendThreeSolutionsMessage();
-      } else {
-        appendChatMessage(fallback.reply, 'bot');
-        renderSuggestions(fallback.suggestions);
-      }
+      triggerHaptic('medium');
+      appendChatMessage(data.error || '⚠️ Ошибка при обращении к нейросети медиатора. Попробуй ещё раз.', 'bot');
     }
   } catch (err) {
     if (typingBubble) typingBubble.remove();
     triggerHaptic('medium');
-    const fallback = getOfflineReplyClient(text);
-    if (fallback.isThreeSolutions) {
-      appendThreeSolutionsMessage();
-    } else {
-      appendChatMessage(fallback.reply, 'bot');
-      renderSuggestions(fallback.suggestions);
-    }
+    console.error('Chat API error:', err);
+    appendChatMessage('⚠️ Не удалось связаться с сервером медиатора. Пожалуйста, проверь интернет или повтори запрос через пару секунд.', 'bot');
   }
 }
 
@@ -1279,7 +1282,7 @@ async function startConflictAnalysis() {
   try {
     let response;
     if (state.wizard.imageBase64) {
-      response = await fetch('/api/analyze-screenshot', {
+      response = await fetch(`${API_BASE}/api/analyze-screenshot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1290,7 +1293,7 @@ async function startConflictAnalysis() {
         })
       });
     } else {
-      response = await fetch('/api/analyze-conflict', {
+      response = await fetch(`${API_BASE}/api/analyze-conflict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1306,20 +1309,25 @@ async function startConflictAnalysis() {
     if (loadingEl) loadingEl.classList.add('hidden');
     if (resultEl) resultEl.classList.remove('hidden');
 
-    if (data.ok) {
+    if (data.ok && (data.analysis || data.reply)) {
       triggerHaptic('heavy');
       const formatted = formatMarkdown(data.analysis || data.reply || '');
       if (resultTextEl) resultTextEl.innerHTML = formatted;
     } else {
-      const fallbackAdvice = getOfflineAnalysisClient(state.wizard.opponent, state.wizard.category, desc);
-      if (resultTextEl) resultTextEl.innerHTML = formatMarkdown(fallbackAdvice);
+      triggerHaptic('medium');
+      const errorMsg = data.error || 'Не удалось сформировать разбор ситуации.';
+      if (resultTextEl) {
+        resultTextEl.innerHTML = `⚠️ <strong>Ошибка генерации:</strong> ${errorMsg}<br><br>Попробуй нажать кнопку разбора ещё раз или проверь интернет.`;
+      }
     }
   } catch (err) {
     if (loadingEl) loadingEl.classList.add('hidden');
     if (resultEl) resultEl.classList.remove('hidden');
     triggerHaptic('heavy');
-    const fallbackAdvice = getOfflineAnalysisClient(state.wizard.opponent, state.wizard.category, desc);
-    if (resultTextEl) resultTextEl.innerHTML = formatMarkdown(fallbackAdvice);
+    console.error('Wizard error:', err);
+    if (resultTextEl) {
+      resultTextEl.innerHTML = '⚠️ <strong>Не удалось связаться с сервером медиатора.</strong><br><br>Пожалуйста, проверь подключение к сети и нажми кнопку повторно.';
+    }
   }
 }
 
