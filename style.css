@@ -2229,3 +2229,22 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .hidden { display: none !important; }
+
+/* Кастомные брендовые эмодзи */
+.custom-emoji {
+  width: 1.32em;
+  height: 1.32em;
+  vertical-align: -0.22em;
+  display: inline-block;
+  object-fit: contain;
+  margin: 0 2px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.phone-custom-emoji {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+}

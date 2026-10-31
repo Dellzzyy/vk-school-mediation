@@ -695,7 +695,7 @@ function renderPsychTest() {
 
   // Интро-экран перед началом теста
   if (!state.psychTest.started) {
-    container.innerHTML = `
+    container.innerHTML = replaceEmojisWithCustomIcons(`
       <div class="test-intro-card">
         <span class="test-intro-badge">📋 ПСИХОЛОГИЧЕСКИЙ ТЕСТ</span>
         <h2 class="test-intro-title">${PSYCH_TEST.title}</h2>
@@ -708,7 +708,7 @@ function renderPsychTest() {
         </div>
         <button class="btn-primary-glow" onclick="startPsychTest()">НАЧАТЬ ТЕСТ (5 СИТУАЦИЙ) →</button>
       </div>
-    `;
+    `);
     return;
   }
 
@@ -825,7 +825,7 @@ function renderPsychResult() {
   // 4. Формирование цельного связного портрета по всем ответам
   const narrativeText = generateCohesiveNarrative(state.psychTest.answers, primaryKey, secondaryKey);
 
-  container.innerHTML = `
+  container.innerHTML = replaceEmojisWithCustomIcons(`
     <div class="test-result-card">
       
       <!-- Дисклеймер от медиатора -->
@@ -896,7 +896,7 @@ function renderPsychResult() {
         </button>
       </div>
     </div>
-  `;
+  `);
 }
 
 function resetPsychTest() {
@@ -1035,7 +1035,7 @@ function appendThreeSolutionsMessage() {
   const msgDiv = document.createElement('div');
   msgDiv.className = 'msg bot-msg';
 
-  msgDiv.innerHTML = `
+  msgDiv.innerHTML = replaceEmojisWithCustomIcons(`
     <div class="bubble">
       🎯 <strong>Я могу предложить тебе 3 эффективных решения:</strong><br><br>
       1. 🧠 <strong>Психологический тест</strong> — определи свой ведущий стиль поведения в школьных конфликтах по методу К. Томаса.<br>
@@ -1054,7 +1054,7 @@ function appendThreeSolutionsMessage() {
         </button>
       </div>
     </div>
-  `;
+  `);
 
   container.appendChild(msgDiv);
   container.scrollTop = container.scrollHeight;
@@ -1099,7 +1099,7 @@ function clearUnifiedAssistant() {
   const container = document.getElementById('chatMessages');
   const sugContainer = document.getElementById('chatSuggestions');
   if (container) {
-    container.innerHTML = `
+    container.innerHTML = replaceEmojisWithCustomIcons(`
       <div class="msg bot-msg">
         <div class="bubble">
           👋 <strong>Привет! Я школьный медиатор.</strong><br><br>
@@ -1107,7 +1107,7 @@ function clearUnifiedAssistant() {
           Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
         </div>
       </div>
-    `;
+    `);
   }
   if (sugContainer) sugContainer.innerHTML = '';
   resetWizard();
@@ -1180,9 +1180,72 @@ function removeWizardImg(event) {
   triggerHaptic('light');
 }
 
+// =====================================================================
+// МАППИНГ И ЗАМЕНА ЭМОДЗИ НА КАСТОМНЫЕ БРЕНДОВЫЕ ИКОНКИ
+// =====================================================================
+const EMOJI_ICON_MAP = {
+  '👨‍👩‍👧': './images/icons/family.png',
+  '👋': './images/icons/handshake.png',
+  '💬': './images/icons/chat.png',
+  '💭': './images/icons/chat.png',
+  '🗣️': './images/icons/two_people.png',
+  '🗣': './images/icons/two_people.png',
+  '🔍': './images/icons/question.png',
+  '🔎': './images/icons/question.png',
+  '⚖️': './images/icons/scales.png',
+  '⚖': './images/icons/scales.png',
+  '🛡️': './images/icons/shield_check.png',
+  '🛡': './images/icons/shield_check.png',
+  '🚫': './images/icons/conflict_angry.png',
+  '❌': './images/icons/conflict_angry.png',
+  '🤝': './images/icons/handshake.png',
+  '🕊️': './images/icons/team_agreement.png',
+  '🕊': './images/icons/team_agreement.png',
+  '🔥': './images/icons/shield_check.png',
+  '🧠': './images/icons/student_curly.png',
+  '📚': './images/icons/books.png',
+  '📖': './images/icons/books.png',
+  '📋': './images/icons/document_pen.png',
+  '📝': './images/icons/document_pen.png',
+  '📊': './images/icons/scales.png',
+  '🧭': './images/icons/sparkles.png',
+  '🧩': './images/icons/two_people.png',
+  '🎯': './images/icons/sparkles.png',
+  '✨': './images/icons/sparkles.png',
+  '💡': './images/icons/sparkles.png',
+  '🔄': './images/icons/chat.png',
+  '⚠️': './images/icons/siren.png',
+  '⚠': './images/icons/siren.png',
+  '🚨': './images/icons/siren.png',
+  '📞': './images/icons/smartphone.png',
+  '📱': './images/icons/smartphone.png',
+  '📸': './images/icons/smartphone.png',
+  '🔒': './images/icons/padlock.png',
+  '⏸️': './images/icons/shield_check.png',
+  '⏸': './images/icons/shield_check.png',
+  '👤': './images/icons/student_boy.png',
+  '👥': './images/icons/classmates.png',
+  '🧘': './images/icons/shield_check.png',
+  '✅': './images/icons/shield_check.png',
+  '🔹': './images/icons/sparkles.png',
+  '📌': './images/icons/document_pen.png'
+};
+
+function replaceEmojisWithCustomIcons(str) {
+  if (!str) return '';
+  let result = str;
+  const sortedKeys = Object.keys(EMOJI_ICON_MAP).sort((a, b) => b.length - a.length);
+  for (const emoji of sortedKeys) {
+    if (result.includes(emoji)) {
+      result = result.split(emoji).join(`<img src="${EMOJI_ICON_MAP[emoji]}" class="custom-emoji" alt="">`);
+    }
+  }
+  return result;
+}
+
 function formatMarkdown(text) {
   if (!text) return '';
-  return text
+  const formatted = text
     .replace(/^### (.*$)/gim, '<h4 style="margin: 12px 0 6px; color: var(--text-primary); font-size: 14.5px; font-weight: 700;">$1</h4>')
     .replace(/^## (.*$)/gim, '<h3 style="margin: 14px 0 8px; color: var(--text-primary); font-size: 15.5px; font-weight: 700;">$1</h3>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -1190,6 +1253,8 @@ function formatMarkdown(text) {
     .replace(/^• (.*$)/gim, '<div style="margin: 3px 0; padding-left: 10px;">• $1</div>')
     .replace(/\n\n/g, '<div style="height: 8px;"></div>')
     .replace(/\n/g, '<br>');
+
+  return replaceEmojisWithCustomIcons(formatted);
 }
 
 async function startConflictAnalysis() {
