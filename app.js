@@ -8,14 +8,16 @@ const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes(
 
 // Конфигурация API Backend (поддержка прямого вызова GigaChat через HTTPS бэкенд)
 const API_BASE = (function() {
-  const urlParam = new URLSearchParams(window.location.search).get('api');
+  const urlParams = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const urlParam = urlParams.get('api') || hashParams.get('api');
   if (urlParam) return urlParam.replace(/\/+$/, '');
   if (window.APP_API_BASE) return window.APP_API_BASE.replace(/\/+$/, '');
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return '';
   }
   // Публичный HTTPS туннель к бэкенду с GigaChat
-  return 'https://ef54ec4ec92fcb.lhr.life';
+  return 'https://982ae5f0847873.lhr.life';
 })();
 
 // Состояние приложения
