@@ -1103,9 +1103,9 @@ function clearUnifiedAssistant() {
   const sugContainer = document.getElementById('chatSuggestions');
   if (container) {
     container.innerHTML = replaceEmojisWithCustomIcons(`
-      <div class="msg bot-msg">
+      <div class="msg bot-msg welcome-msg">
         <div class="bubble">
-          👋 <strong>Привет! Я школьный медиатор.</strong><br><br>
+          <img src="./images/icons/glyphs/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
           Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
           Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
         </div>

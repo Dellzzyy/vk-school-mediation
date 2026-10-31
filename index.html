@@ -37,7 +37,7 @@
           <div class="assistant-title-row">
             <div class="assistant-agent-badge">
               <div class="agent-avatar-box">
-                <img src="./images/icons/glyphs/sparkles.png" class="agent-icon" alt="Медиатор">
+                <img src="./images/icons/scales_rays.png" class="agent-avatar-card-img" alt="Медиатор">
               </div>
               <div class="agent-meta">
                 <h3 class="agent-name">СЛУЖБА ШКОЛЬНОЙ МЕДИАЦИИ</h3>
@@ -50,7 +50,7 @@
           <div class="three-solutions-bar">
             <button class="solution-tab-btn active" id="tabBtnChat" onclick="setAssistantMode('chat')">
               <img src="./images/icons/glyphs/chat.png" class="sol-icon-img" alt="">
-              <span>РАЗОБРАТЬ КАК МЕДИАТОР</span>
+              <span>РАЗОБРАТЬ СПОР</span>
             </button>
             <button class="solution-tab-btn" id="tabBtnWizard" onclick="setAssistantMode('wizard')">
               <img src="./images/icons/glyphs/scales.png" class="sol-icon-img" alt="">
@@ -58,7 +58,7 @@
             </button>
             <button class="solution-tab-btn" id="tabBtnTest" onclick="setAssistantMode('test')">
               <img src="./images/icons/glyphs/student_curly.png" class="sol-icon-img" alt="">
-              <span>ПСИХОЛОГИЧЕСКИЙ ТЕСТ</span>
+              <span>ТЕСТ ПОВЕДЕНИЯ</span>
             </button>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <!-- 1. РЕЖИМ ЧАТА С МЕДИАТОРОМ -->
           <div id="assistantModeChat" class="assistant-mode-panel active">
             <div class="chat-messages" id="chatMessages">
-              <div class="msg bot-msg">
+              <div class="msg bot-msg welcome-msg">
                 <div class="bubble">
                   <img src="./images/icons/glyphs/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
                   Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
@@ -81,11 +81,14 @@
             <!-- Панель ввода чата -->
             <div class="chat-input-bar">
               <button class="btn-attach" onclick="triggerChatPhotoUpload()" title="Прикрепить скриншот">
-                <img src="./images/icons/glyphs/smartphone.png" class="btn-attach-img" alt="Фото">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
               </button>
-              <input type="text" id="chatInput" placeholder="Опиши ситуацию или напиши «тест»..." onkeypress="handleChatKeyPress(event)">
-              <button class="btn-send" id="btnSendChat" onclick="sendChatMessage()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <input type="text" id="chatInput" placeholder="Напиши, что случилось..." onkeypress="handleChatKeyPress(event)">
+              <button class="btn-send" id="btnSendChat" onclick="sendChatMessage()" title="Отправить">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
