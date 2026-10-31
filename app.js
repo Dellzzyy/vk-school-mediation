@@ -17,7 +17,7 @@ const API_BASE = (function() {
     return '';
   }
   // Публичный HTTPS туннель к бэкенду с GigaChat
-  return 'https://982ae5f0847873.lhr.life';
+  return 'https://42d5ece7222540.lhr.life';
 })();
 
 // Состояние приложения
@@ -1107,7 +1107,7 @@ function clearUnifiedAssistant() {
     container.innerHTML = replaceEmojisWithCustomIcons(`
       <div class="msg bot-msg welcome-msg">
         <div class="bubble">
-          <img src="./images/icons/glyphs/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
+          <img src="./images/icons/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
           Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
           Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
         </div>
@@ -1189,51 +1189,60 @@ function removeWizardImg(event) {
 // МАППИНГ И ЗАМЕНА ЭМОДЗИ НА КАСТОМНЫЕ БРЕНДОВЫЕ ИКОНКИ
 // =====================================================================
 const EMOJI_ICON_MAP = {
-  '👨‍👩‍👧': './images/icons/glyphs/family.png',
-  '👋': './images/icons/glyphs/handshake.png',
-  '💬': './images/icons/glyphs/chat.png',
-  '💭': './images/icons/glyphs/chat.png',
-  '🗣️': './images/icons/glyphs/two_people.png',
-  '🗣': './images/icons/glyphs/two_people.png',
-  '🔍': './images/icons/glyphs/question.png',
-  '🔎': './images/icons/glyphs/question.png',
-  '⚖️': './images/icons/glyphs/scales.png',
-  '⚖': './images/icons/glyphs/scales.png',
-  '🛡️': './images/icons/glyphs/shield_check.png',
-  '🛡': './images/icons/glyphs/shield_check.png',
-  '🚫': './images/icons/glyphs/conflict_angry.png',
-  '❌': './images/icons/glyphs/conflict_angry.png',
-  '🤝': './images/icons/glyphs/handshake.png',
-  '🕊️': './images/icons/glyphs/team_agreement.png',
-  '🕊': './images/icons/glyphs/team_agreement.png',
-  '🔥': './images/icons/glyphs/shield_check.png',
-  '🧠': './images/icons/glyphs/student_curly.png',
-  '📚': './images/icons/glyphs/books.png',
-  '📖': './images/icons/glyphs/books.png',
-  '📋': './images/icons/glyphs/document_pen.png',
-  '📝': './images/icons/glyphs/document_pen.png',
-  '📊': './images/icons/glyphs/scales.png',
-  '🧭': './images/icons/glyphs/sparkles.png',
-  '🧩': './images/icons/glyphs/two_people.png',
-  '🎯': './images/icons/glyphs/sparkles.png',
-  '✨': './images/icons/glyphs/sparkles.png',
-  '💡': './images/icons/glyphs/sparkles.png',
-  '🔄': './images/icons/glyphs/chat.png',
-  '⚠️': './images/icons/glyphs/siren.png',
-  '⚠': './images/icons/glyphs/siren.png',
-  '🚨': './images/icons/glyphs/siren.png',
-  '📞': './images/icons/glyphs/smartphone.png',
-  '📱': './images/icons/glyphs/smartphone.png',
-  '📸': './images/icons/glyphs/smartphone.png',
-  '🔒': './images/icons/glyphs/padlock.png',
-  '⏸️': './images/icons/glyphs/shield_check.png',
-  '⏸': './images/icons/glyphs/shield_check.png',
-  '👤': './images/icons/glyphs/student_boy.png',
-  '👥': './images/icons/glyphs/classmates.png',
-  '🧘': './images/icons/glyphs/shield_check.png',
-  '✅': './images/icons/glyphs/shield_check.png',
-  '🔹': './images/icons/glyphs/sparkles.png',
-  '📌': './images/icons/glyphs/document_pen.png'
+  '👨‍👩‍👧': './images/icons/family.png',
+  '👨‍👩‍👦': './images/icons/family.png',
+  '👪': './images/icons/family.png',
+  '👋': './images/icons/handshake.png',
+  '💬': './images/icons/chat.png',
+  '💭': './images/icons/chat.png',
+  '🗣️': './images/icons/two_people.png',
+  '🗣': './images/icons/two_people.png',
+  '🔍': './images/icons/question.png',
+  '🔎': './images/icons/question.png',
+  '⚖️': './images/icons/scales.png',
+  '⚖': './images/icons/scales.png',
+  '🛡️': './images/icons/shield_check.png',
+  '🛡': './images/icons/shield_check.png',
+  '🚫': './images/icons/conflict_angry.png',
+  '❌': './images/icons/conflict_angry.png',
+  '🤝': './images/icons/handshake.png',
+  '🕊️': './images/icons/team_agreement.png',
+  '🕊': './images/icons/team_agreement.png',
+  '🔥': './images/icons/conflict_angry.png',
+  '🧠': './images/icons/student_curly.png',
+  '📚': './images/icons/books.png',
+  '📖': './images/icons/books.png',
+  '📋': './images/icons/document_pen.png',
+  '📝': './images/icons/document_pen.png',
+  '📊': './images/icons/scales.png',
+  '🧭': './images/icons/sparkles.png',
+  '🧩': './images/icons/two_people.png',
+  '🎯': './images/icons/sparkles.png',
+  '✨': './images/icons/sparkles.png',
+  '💡': './images/icons/sparkles.png',
+  '🔄': './images/icons/chat.png',
+  '⚠️': './images/icons/siren.png',
+  '⚠': './images/icons/siren.png',
+  '🚨': './images/icons/siren.png',
+  '📞': './images/icons/smartphone.png',
+  '📱': './images/icons/smartphone.png',
+  '📸': './images/icons/smartphone.png',
+  '📷': './images/icons/smartphone.png',
+  '🔒': './images/icons/padlock.png',
+  '🔓': './images/icons/padlock.png',
+  '⏸️': './images/icons/shield_check.png',
+  '⏸': './images/icons/shield_check.png',
+  '👤': './images/icons/student_boy.png',
+  '👥': './images/icons/classmates.png',
+  '🧘': './images/icons/shield_check.png',
+  '✅': './images/icons/shield_check.png',
+  '🔹': './images/icons/sparkles.png',
+  '📌': './images/icons/document_pen.png',
+  '🏠': './images/icons/home.png',
+  '❓': './images/icons/question.png',
+  '❗': './images/icons/siren.png',
+  '❕': './images/icons/question.png',
+  '💯': './images/icons/scales.png'
 };
 
 function replaceEmojisWithCustomIcons(str) {

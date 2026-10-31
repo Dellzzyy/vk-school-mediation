@@ -15,16 +15,13 @@
 </head>
 <body>
   <div id="app" class="app-container">
-    <!-- Top Header -->
+    <!-- Top Header: Компактная шапка по центру -->
     <header class="app-header">
-      <div class="header-content">
-        <div class="brand-badge">
-          <span class="pulse-dot"></span>
-          <span class="brand-name">МЕДИАЦИЯ 24/7</span>
-        </div>
-        <div class="header-user" id="headerUser">
-          <span class="user-greeting" id="userGreeting">Привет!</span>
-        </div>
+      <div class="header-center-pill">
+        <span class="pulse-dot"></span>
+        <span class="header-brand-title">МЕДИАЦИЯ 24/7</span>
+        <span class="header-dot-sep">•</span>
+        <span class="header-user-greeting" id="userGreeting">Привет, Гость</span>
       </div>
     </header>
 
@@ -49,15 +46,15 @@
           <!-- 3 Главных решения (Переключатель инструментов) -->
           <div class="three-solutions-bar">
             <button class="solution-tab-btn active" id="tabBtnChat" onclick="setAssistantMode('chat')">
-              <img src="./images/icons/glyphs/chat.png" class="sol-icon-img" alt="">
+              <img src="./images/icons/chat.png" class="sol-icon-img" alt="Чат">
               <span>РАЗОБРАТЬ СПОР</span>
             </button>
             <button class="solution-tab-btn" id="tabBtnWizard" onclick="setAssistantMode('wizard')">
-              <img src="./images/icons/glyphs/scales.png" class="sol-icon-img" alt="">
+              <img src="./images/icons/scales.png" class="sol-icon-img" alt="Мастер">
               <span>МАСТЕР КОНФЛИКТОВ</span>
             </button>
             <button class="solution-tab-btn" id="tabBtnTest" onclick="setAssistantMode('test')">
-              <img src="./images/icons/glyphs/student_curly.png" class="sol-icon-img" alt="">
+              <img src="./images/icons/student_curly.png" class="sol-icon-img" alt="Тест">
               <span>ТЕСТ ПОВЕДЕНИЯ</span>
             </button>
           </div>
@@ -71,7 +68,7 @@
             <div class="chat-messages" id="chatMessages">
               <div class="msg bot-msg welcome-msg">
                 <div class="bubble">
-                  <img src="./images/icons/glyphs/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
+                  <img src="./images/icons/handshake.png" class="custom-emoji" alt="Привет"> <strong>Привет! Я школьный медиатор.</strong><br><br>
                   Если возник конфликт с одноклассниками, друзьями, учителями или близкими и ты не знаешь, как его решить, здесь можно спокойно разобраться в ситуации.<br><br>
                   Расскажи своими словами, что произошло. Здесь можно говорить о том, что тебя беспокоит — без осуждения и лишних оценок.
                 </div>
@@ -81,10 +78,7 @@
             <!-- Панель ввода чата -->
             <div class="chat-input-bar">
               <button class="btn-attach" onclick="triggerChatPhotoUpload()" title="Прикрепить скриншот">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
+                <img src="./images/icons/smartphone.png" class="btn-attach-img" alt="Скриншот">
               </button>
               <input type="text" id="chatInput" placeholder="Напиши, что случилось..." onkeypress="handleChatKeyPress(event)">
               <button class="btn-send" id="btnSendChat" onclick="sendChatMessage()" title="Отправить">
@@ -212,7 +206,7 @@
 
               <div class="upload-box" onclick="document.getElementById('wizardFileInput').click()">
                 <input type="file" id="wizardFileInput" accept="image/*" style="display:none" onchange="handleWizardFile(this)">
-                <img src="./images/icons/glyphs/smartphone.png" class="upload-icon-img" alt="Фото">
+                <img src="./images/icons/smartphone.png" class="upload-icon-img" alt="Фото">
                 <span class="upload-text" id="wizardUploadText">Прикрепить скриншот переписки (по желанию)</span>
               </div>
               <div id="wizardImgPreviewWrap" class="img-preview-wrap hidden">
@@ -236,7 +230,7 @@
               </div>
 
               <div id="wizardResult" class="wizard-result hidden">
-                <div class="result-badge"><img src="./images/icons/glyphs/scales.png" class="badge-icon-img" alt=""> ГОТОВОЕ РЕШЕНИЕ МЕДИАТОРА</div>
+                <div class="result-badge"><img src="./images/icons/scales.png" class="badge-icon-img" alt=""> ГОТОВОЕ РЕШЕНИЕ МЕДИАТОРА</div>
                 <div class="result-body" id="wizardResultText"></div>
                 
                 <div class="result-actions">
@@ -272,17 +266,21 @@
             <div class="sos-subtle-phones-grid">
               <a href="tel:88002000122" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
                 <div class="sos-btn-lead">
-                  <img src="./images/icons/glyphs/smartphone.png" class="custom-emoji phone-custom-emoji" alt="Телефон">
-                  <span class="phone-number-text">8 (800) 200-01-22</span>
+                  <img src="./images/icons/smartphone.png" class="sos-card-icon-img" alt="Телефон доверия">
+                  <div class="sos-text-col">
+                    <span class="phone-number-text">8 (800) 200-01-22</span>
+                    <span class="phone-desc-text">Детский телефон доверия</span>
+                  </div>
                 </div>
-                <span class="phone-desc-text">Детский телефон доверия</span>
               </a>
               <a href="tel:84742284045" class="sos-subtle-phone-btn" onclick="triggerHaptic('medium')">
                 <div class="sos-btn-lead">
-                  <img src="./images/icons/glyphs/smartphone.png" class="custom-emoji phone-custom-emoji" alt="Телефон">
-                  <span class="phone-number-text">8 (4742) 28-40-45</span>
+                  <img src="./images/icons/siren.png" class="sos-card-icon-img" alt="Экстренная помощь">
+                  <div class="sos-text-col">
+                    <span class="phone-number-text">8 (4742) 28-40-45</span>
+                    <span class="phone-desc-text">Телефон доверия для детей и родителей</span>
+                  </div>
                 </div>
-                <span class="phone-desc-text">Телефон доверия для детей и родителей</span>
               </a>
             </div>
           </div>

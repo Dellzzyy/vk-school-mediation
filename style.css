@@ -115,69 +115,70 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 /* ================= ВЕРХНЯЯ ШАПКА ================= */
 .app-header {
-  padding: max(12px, env(safe-area-inset-top)) max(96px, calc(env(safe-area-inset-right) + 90px)) 8px 16px;
+  padding: max(8px, env(safe-area-inset-top)) 16px 4px 16px;
   background: transparent;
   border-bottom: none;
   z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-.header-content {
-  display: flex;
+.header-center-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.brand-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 800;
-  font-size: 14px;
-  color: var(--text-primary);
-  white-space: nowrap;
+  justify-content: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(11, 77, 80, 0.12);
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.05);
+  max-width: 90%;
 }
 
 .pulse-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-green);
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  background: #10b981;
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-green);
+  box-shadow: 0 0 6px #10b981;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
   0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--accent-green); }
+  50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 10px #10b981; }
   100% { transform: scale(0.95); opacity: 0.8; }
 }
 
-.header-user {
-  display: flex;
-  align-items: center;
-  max-width: 130px;
+.header-brand-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+  white-space: nowrap;
 }
 
-.user-greeting {
+.header-dot-sep {
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.header-user-greeting {
   font-size: 11px;
   font-weight: 700;
-  color: var(--text-primary);
-  background: rgba(11, 77, 80, 0.08);
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.2px;
+  color: var(--accent-primary);
+  letter-spacing: 0.1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
-  display: inline-block;
-}
-
-@media (max-width: 360px) {
-  .header-user {
-    display: none;
-  }
+  max-width: 160px;
 }
 
 .anon-icon-img {
@@ -1097,8 +1098,9 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 .chat-messages {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 12px;
-  padding: 10px 0;
+  padding: 8px 0 12px 0;
   min-height: 250px;
 }
 
@@ -1184,19 +1186,22 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 0 max(12px, env(safe-area-inset-bottom)) 0;
+  padding: 10px 0 max(8px, env(safe-area-inset-bottom)) 0;
+  margin-top: auto;
+  border-top: 1px solid rgba(11, 77, 80, 0.08);
 }
 
 .chat-input-bar input {
   flex: 1;
   min-width: 0;
+  height: 42px;
   background: #ffffff;
   border: 1.5px solid rgba(11, 77, 80, 0.14);
   border-radius: var(--radius-pill);
-  padding: 11px 16px;
+  padding: 0 16px;
   color: var(--text-primary);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
   outline: none;
   box-shadow: 0 2px 8px rgba(11, 77, 80, 0.04);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1591,12 +1596,11 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 .sos-subtle-phone-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   background: rgba(235, 248, 246, 0.75);
   border: 1px solid rgba(11, 77, 80, 0.14);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
   text-decoration: none;
   color: inherit;
   transition: all 0.15s ease;
@@ -1609,41 +1613,38 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 .sos-btn-lead {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  width: 100%;
+}
+
+.sos-card-icon-img {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  object-fit: contain;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
-.phone-icon-mini {
-  font-size: 14px;
-  opacity: 0.75;
+.sos-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .phone-number-text {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: 0.2px;
-  white-space: nowrap;
 }
 
 .phone-desc-text {
   font-size: 11px;
   font-weight: 600;
   color: var(--text-secondary);
-  text-align: right;
   line-height: 1.25;
-}
-
-@media (max-width: 380px) {
-  .sos-subtle-phone-btn {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .phone-desc-text {
-    text-align: left;
-    margin-left: 22px;
-  }
 }
 
 /* ================= ОБЪЕДИНЕННЫЙ ЦЕНТР МЕДИАЦИИ ================= */
@@ -1764,10 +1765,10 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .solution-tab-btn .sol-icon-img {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
-  opacity: 0.7;
+  border-radius: 7px;
   transition: all 0.2s ease;
 }
 
@@ -1792,7 +1793,8 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 .solution-tab-btn.active .sol-icon-img {
   opacity: 1;
-  transform: scale(1.05);
+  transform: scale(1.06);
+  box-shadow: 0 2px 6px rgba(11, 77, 80, 0.15);
 }
 
 .assistant-body-card {
@@ -1801,12 +1803,21 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   border-radius: 0;
   padding: 4px 14px 14px 14px;
   box-shadow: none;
-  min-height: 380px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .assistant-mode-panel {
   display: block;
   animation: fadeIn 0.2s ease;
+}
+
+#assistantModeChat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 380px;
 }
 
 .assistant-mode-panel.hidden {
@@ -1857,7 +1868,6 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   align-items: center;
   justify-content: center;
   padding: 0;
-  color: var(--accent-primary);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
@@ -1866,15 +1876,11 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   background: #f0fbfc;
 }
 
-.btn-attach svg {
-  display: block;
-}
-
 .btn-attach-img {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
-  opacity: 0.85;
+  border-radius: 6px;
 }
 
 /* Стили психологического теста */
@@ -2294,18 +2300,12 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 /* Кастомные брендовые эмодзи */
 .custom-emoji {
-  width: 1.25em;
-  height: 1.25em;
-  vertical-align: -0.2em;
+  width: 1.35em;
+  height: 1.35em;
+  vertical-align: -0.25em;
   display: inline-block;
   object-fit: contain;
-  margin: 0 2px;
+  margin: 0 3px;
   pointer-events: none;
-}
-
-.phone-custom-emoji {
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;
-  margin-right: 6px;
+  border-radius: 4px;
 }
