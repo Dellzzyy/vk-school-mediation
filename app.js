@@ -6,9 +6,9 @@
 const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
-// Конфигурация API Backend (постоянный HTTPS-домен на сервере медиации)
+// Конфигурация API Backend (прямой чистый HTTPS туннель к серверу медиации)
 const API_ENDPOINTS = [
-  'https://vk-school-mediation.loca.lt'
+  'https://88c6aadad583fc.lhr.life'
 ];
 
 async function apiRequest(endpoint, payload) {
