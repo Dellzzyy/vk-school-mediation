@@ -7,8 +7,10 @@ const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
 // Конфигурация API Backend (прямой чистый HTTPS туннель к серверу медиации)
+// Конфигурация API Backend (постоянный поддомен localtunnel + fallback localhost.run)
 const API_ENDPOINTS = [
-  'https://88c6aadad583fc.lhr.life'
+  'https://vk-school-mediation.loca.lt',
+  'https://dbb2b0259ba91e.lhr.life'
 ];
 
 async function apiRequest(endpoint, payload) {
@@ -36,15 +38,22 @@ async function apiRequest(endpoint, payload) {
       const res = await fetch(fullUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'bypass-tunnel-reminder': 'true'
         },
         body: JSON.stringify(payload),
         signal: controller.signal
       });
       clearTimeout(timer);
 
-      if ([502, 503, 504].includes(res.status)) {
-        console.warn(`Endpoint ${fullUrl} returned ${res.status}, trying fallback...`);
+      if (!res.ok || [502, 503, 504].includes(res.status)) {
+        console.warn(`Endpoint ${fullUrl} returned status ${res.status}, trying fallback...`);
+        continue;
+      }
+
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        console.warn(`Endpoint ${fullUrl} returned non-JSON response (${contentType}), trying fallback...`);
         continue;
       }
 
@@ -1107,7 +1116,9 @@ function appendChatMessage(text, sender) {
 
   msgDiv.appendChild(bubbleDiv);
   container.appendChild(msgDiv);
-  container.scrollTop = container.scrollHeight;
+  requestAnimationFrame(() => {
+    container.scrollTop = container.scrollHeight;
+  });
 }
 
 function appendTypingIndicator() {
@@ -1118,7 +1129,9 @@ function appendTypingIndicator() {
   msgDiv.className = 'msg bot-msg';
   msgDiv.innerHTML = '<div class="bubble" style="color:var(--text-muted);font-style:italic">Медиатор думает...</div>';
   container.appendChild(msgDiv);
-  container.scrollTop = container.scrollHeight;
+  requestAnimationFrame(() => {
+    container.scrollTop = container.scrollHeight;
+  });
   return msgDiv;
 }
 

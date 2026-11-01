@@ -129,15 +129,16 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.88);
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(11, 77, 80, 0.12);
-  padding: 4px 14px;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   box-shadow: 0 2px 8px rgba(11, 77, 80, 0.05);
-  max-width: 90%;
+  max-width: calc(100% - 130px);
+  margin: 0 auto;
 }
 
 .pulse-dot {
@@ -1096,11 +1097,31 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .chat-messages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 4px 0 8px 0;
-  min-height: auto;
+  padding: 6px 4px 10px 4px;
+  scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(11, 77, 80, 0.2);
+  border-radius: 4px;
+}
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 77, 80, 0.35);
 }
 
 .msg {
@@ -1812,8 +1833,17 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 #assistantModeChat {
-  display: block;
-  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  max-height: 60vh;
+  min-height: 390px;
+  position: relative;
+  overflow: hidden;
+}
+
+#assistantModeChat.hidden {
+  display: none !important;
 }
 
 .assistant-mode-panel.hidden {
