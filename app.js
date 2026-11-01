@@ -33,7 +33,7 @@ async function apiRequest(endpoint, payload) {
     try {
       const fullUrl = base ? `${base}${endpoint}` : endpoint;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 12000);
+      const timer = setTimeout(() => controller.abort(), 45000);
 
       const res = await fetch(fullUrl, {
         method: 'POST',
