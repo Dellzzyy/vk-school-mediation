@@ -6,10 +6,9 @@
 const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
-// Конфигурация API Backend: отказоустойчивый пул туннелей с автоматическим переключением
+// Конфигурация API Backend (постоянный HTTPS-домен на сервере медиации)
 const API_ENDPOINTS = [
-  'https://vk-school-mediation.loca.lt',
-  'https://d44e6d5e8e04dd.lhr.life'
+  'https://vk-school-mediation.loca.lt'
 ];
 
 async function apiRequest(endpoint, payload) {
@@ -37,8 +36,7 @@ async function apiRequest(endpoint, payload) {
       const res = await fetch(fullUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Bypass-Tunnel-Reminder': 'true'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload),
         signal: controller.signal
