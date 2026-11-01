@@ -8,20 +8,18 @@
   <script src="./vk-bridge.js"></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1793558000">
+  <link rel="stylesheet" href="./style.css?v=1793560000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="app" class="app-container">
-    <!-- Top Header: Компактная шапка по центру -->
+    <!-- Top Header: Статус слева (безопасное расстояние от нативных кнопок VK справа) -->
     <header class="app-header">
-      <div class="header-center-pill">
+      <div class="header-status-pill">
         <span class="pulse-dot"></span>
         <span class="header-brand-title">МЕДИАЦИЯ 24/7</span>
-        <span class="header-dot-sep">•</span>
-        <span class="header-user-greeting" id="userGreeting">Привет, Гость</span>
       </div>
     </header>
 
@@ -34,9 +32,10 @@
           <div class="assistant-title-row">
             <div class="assistant-agent-badge">
               <div class="agent-avatar-box">
-                <img src="./images/icons/scales_rays.png" class="agent-avatar-card-img" alt="Медиатор">
+                <img src="./images/icons/scales.png" class="agent-avatar-card-img" alt="Медиатор">
               </div>
               <div class="agent-meta">
+                <div class="user-greeting-badge" id="userGreeting">Привет! 👋</div>
                 <h3 class="agent-name">СЛУЖБА ШКОЛЬНОЙ МЕДИАЦИИ</h3>
                 <span class="agent-status"><span class="online-indicator"></span> ИИ-Медиатор онлайн 24/7</span>
               </div>
@@ -290,6 +289,6 @@
     </main>
   </div>
 
-  <script src="./app.js?v=1793558000"></script>
+  <script src="./app.js?v=1793560000"></script>
 </body>
 </html>

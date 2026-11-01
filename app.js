@@ -488,7 +488,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.userName = user.first_name || 'Друг';
         const greetingEl = document.getElementById('userGreeting');
         if (greetingEl) {
-          greetingEl.textContent = `Привет, ${state.userName}!`;
+          greetingEl.textContent = `Привет, ${state.userName}! 👋`;
+        }
+        const welcomeStrong = document.querySelector('.welcome-msg .bubble strong');
+        if (welcomeStrong) {
+          welcomeStrong.textContent = `Привет, ${state.userName}! Я школьный медиатор.`;
         }
       }
     } catch (e) {
@@ -516,7 +520,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.userName = user.first_name || 'Друг';
         const greetingEl = document.getElementById('userGreeting');
         if (greetingEl) {
-          greetingEl.textContent = `Привет, ${state.userName}!`;
+          greetingEl.textContent = `Привет, ${state.userName}! 👋`;
+        }
+        const welcomeStrong = document.querySelector('.welcome-msg .bubble strong');
+        if (welcomeStrong) {
+          welcomeStrong.textContent = `Привет, ${state.userName}! Я школьный медиатор.`;
         }
       }
     } catch (e) {}

@@ -115,20 +115,19 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 /* ================= ВЕРХНЯЯ ШАПКА ================= */
 .app-header {
-  padding: max(8px, env(safe-area-inset-top)) 16px 4px 16px;
+  padding: max(10px, env(safe-area-inset-top)) 16px 4px 16px;
   background: transparent;
   border-bottom: none;
   z-index: 20;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
 
-.header-center-pill {
+.header-status-pill {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
@@ -137,8 +136,6 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   box-shadow: 0 2px 8px rgba(11, 77, 80, 0.05);
-  max-width: calc(100% - 130px);
-  margin: 0 auto;
 }
 
 .pulse-dot {
@@ -1700,24 +1697,21 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .agent-avatar-box {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 12px;
-  background: #ffffff;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: rgba(11, 77, 80, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.12);
-  border: 1px solid rgba(11, 77, 80, 0.08);
+  border: 1.5px solid rgba(11, 77, 80, 0.12);
 }
 
 .agent-avatar-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 11px;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
 .agent-icon {
@@ -1730,6 +1724,14 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 .agent-meta {
   display: flex;
   flex-direction: column;
+}
+
+.user-greeting-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 2px;
+  letter-spacing: 0.1px;
 }
 
 .agent-name {
@@ -1788,8 +1790,8 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   width: 28px;
   height: 28px;
   object-fit: contain;
-  border-radius: 7px;
   transition: all 0.2s ease;
+  display: block;
 }
 
 .solution-tab-btn span {
@@ -1812,9 +1814,7 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .solution-tab-btn.active .sol-icon-img {
-  opacity: 1;
-  transform: scale(1.06);
-  box-shadow: 0 2px 6px rgba(11, 77, 80, 0.15);
+  transform: scale(1.08);
 }
 
 .assistant-body-card {
@@ -1882,20 +1882,19 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 /* Кнопка прикрепления фото в панели ввода */
 .btn-attach {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 11px;
-  background: transparent;
-  border: none;
-  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.1);
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid rgba(11, 77, 80, 0.14);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: transform 0.15s ease;
-  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(11, 77, 80, 0.04);
 }
 
 .btn-attach:active {
@@ -1903,10 +1902,9 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 }
 
 .btn-attach-img {
-  width: 100%;
-  height: 100%;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
-  border-radius: 11px;
   display: block;
 }
 
@@ -2334,5 +2332,4 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   object-fit: contain;
   margin: 0 3px;
   pointer-events: none;
-  border-radius: 4px;
 }
