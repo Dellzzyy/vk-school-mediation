@@ -6,19 +6,59 @@
 const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
-// Конфигурация API Backend (поддержка прямого вызова GigaChat через HTTPS бэкенд)
-const API_BASE = (function() {
+// Конфигурация API Backend: отказоустойчивый пул туннелей с автоматическим переключением
+const API_ENDPOINTS = [
+  'https://vk-school-mediation.loca.lt',
+  'https://d44e6d5e8e04dd.lhr.life'
+];
+
+async function apiRequest(endpoint, payload) {
   const urlParams = new URLSearchParams(window.location.search);
   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-  const urlParam = urlParams.get('api') || hashParams.get('api');
-  if (urlParam) return urlParam.replace(/\/+$/, '');
-  if (window.APP_API_BASE) return window.APP_API_BASE.replace(/\/+$/, '');
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return '';
+  const overrideUrl = urlParams.get('api') || hashParams.get('api') || window.APP_API_BASE;
+
+  let candidates = [];
+  if (overrideUrl) {
+    candidates = [overrideUrl.replace(/\/+$/, '')];
+  } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    candidates = [''];
+  } else {
+    candidates = [...API_ENDPOINTS];
   }
-  // Публичный HTTPS туннель к бэкенду с GigaChat
-  return 'https://93e088c4a77b3f.lhr.life';
-})();
+
+  let lastError = null;
+
+  for (const base of candidates) {
+    try {
+      const fullUrl = base ? `${base}${endpoint}` : endpoint;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 12000);
+
+      const res = await fetch(fullUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Bypass-Tunnel-Reminder': 'true'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+
+      if ([502, 503, 504].includes(res.status)) {
+        console.warn(`Endpoint ${fullUrl} returned ${res.status}, trying fallback...`);
+        continue;
+      }
+
+      return await res.json();
+    } catch (e) {
+      console.warn(`Request failed to ${base}${endpoint}:`, e);
+      lastError = e;
+    }
+  }
+
+  throw lastError || new Error('Сервер медиатора временно недоступен');
+}
 
 // Состояние приложения
 const state = {
@@ -949,17 +989,12 @@ function handleChatFileUpload(input) {
     const typingBubble = appendTypingIndicator();
 
     try {
-      const res = await fetch(`${API_BASE}/api/analyze-screenshot`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: state.userId,
-          image_base64: base64Data,
-          mime_type: mimeType,
-          caption: 'Разбери этот скриншот переписки как медиатор'
-        })
+      const data = await apiRequest('/api/analyze-screenshot', {
+        user_id: state.userId,
+        image_base64: base64Data,
+        mime_type: mimeType,
+        caption: 'Разбери этот скриншот переписки как медиатор'
       });
-      const data = await res.json();
       if (typingBubble) typingBubble.remove();
       if (data.ok && (data.reply || data.analysis)) {
         appendChatMessage(data.reply || data.analysis, 'bot');
@@ -1001,16 +1036,11 @@ async function sendChatMessage(customText = null) {
   const typingBubble = appendTypingIndicator();
 
   try {
-    const res = await fetch(`${API_BASE}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: state.userId,
-        message: text
-      })
+    const data = await apiRequest('/api/chat', {
+      user_id: state.userId,
+      message: text
     });
 
-    const data = await res.json();
     if (typingBubble) typingBubble.remove();
 
     if (data.ok && data.reply) {
@@ -1291,32 +1321,23 @@ async function startConflictAnalysis() {
   if (resultEl) resultEl.classList.add('hidden');
 
   try {
-    let response;
+    let data;
     if (state.wizard.imageBase64) {
-      response = await fetch(`${API_BASE}/api/analyze-screenshot`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: state.userId,
-          image_base64: state.wizard.imageBase64,
-          mime_type: state.wizard.imageMime,
-          caption: `Спор с [${state.wizard.opponent}], категория: [${state.wizard.category}]. ${desc}`
-        })
+      data = await apiRequest('/api/analyze-screenshot', {
+        user_id: state.userId,
+        image_base64: state.wizard.imageBase64,
+        mime_type: state.wizard.imageMime,
+        caption: `Спор с [${state.wizard.opponent}], категория: [${state.wizard.category}]. ${desc}`
       });
     } else {
-      response = await fetch(`${API_BASE}/api/analyze-conflict`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: state.userId,
-          opponent: state.wizard.opponent,
-          category: state.wizard.category,
-          description: desc
-        })
+      data = await apiRequest('/api/analyze-conflict', {
+        user_id: state.userId,
+        opponent: state.wizard.opponent,
+        category: state.wizard.category,
+        description: desc
       });
     }
 
-    const data = await response.json();
     if (loadingEl) loadingEl.classList.add('hidden');
     if (resultEl) resultEl.classList.remove('hidden');
 
