@@ -8,6 +8,6 @@
     "deploy": "vk-miniapps-deploy"
   },
   "devDependencies": {
-    "@vkontakte/vk-miniapps-deploy": "^1.0.2"
+    "@vkontakte/vk-miniapps-deploy": "^1.0.3"
   }
 }

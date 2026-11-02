@@ -8,5 +8,6 @@
   },
   "update_prod": true,
   "update_dev": true,
-  "noprompt": true
+  "noprompt": true,
+  "debug": true
 }
