@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "predeploy": "rm -rf dist && mkdir -p dist && cp -r index.html style.css app.js vk-bridge.js images dist/",
+    "predeploy": "rm -rf dist && mkdir -p dist && cp -r index.html style.css app.js vk-bridge.js images dist/ && cp endpoint.json dist/ 2>/dev/null || true",
     "deploy": "vk-miniapps-deploy"
   },
   "devDependencies": {

@@ -115,7 +115,7 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
 
 /* ================= ВЕРХНЯЯ ШАПКА ================= */
 .app-header {
-  padding: max(10px, env(safe-area-inset-top)) 16px 4px 16px;
+  padding: max(10px, env(safe-area-inset-top)) max(96px, env(safe-area-inset-right)) 4px 16px;
   background: transparent;
   border-bottom: none;
   z-index: 20;
@@ -123,6 +123,7 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .header-status-pill {
@@ -136,6 +137,8 @@ p, .tile-body p, .step-desc, .kb-intro, .kb-card-summary, .modal-body, .bubble, 
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   box-shadow: 0 2px 8px rgba(11, 77, 80, 0.05);
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .pulse-dot {

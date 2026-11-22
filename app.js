@@ -13,20 +13,61 @@ const API_ENDPOINTS = [
   'https://dbb2b0259ba91e.lhr.life'
 ];
 
-async function apiRequest(endpoint, payload) {
+async function resolveApiCandidates() {
   const urlParams = new URLSearchParams(window.location.search);
   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
   const overrideUrl = urlParams.get('api') || hashParams.get('api') || window.APP_API_BASE;
 
-  let candidates = [];
   if (overrideUrl) {
-    candidates = [overrideUrl.replace(/\/+$/, '')];
-  } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    candidates = [''];
-  } else {
-    candidates = [...API_ENDPOINTS];
+    const clean = overrideUrl.replace(/\/+$/, '');
+    try { localStorage.setItem('mediator_api_active', clean); } catch (e) {}
+    return [clean];
   }
 
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return [''];
+  }
+
+  const candidates = [];
+  const cached = localStorage.getItem('mediator_api_active');
+  if (cached && !candidates.includes(cached)) {
+    candidates.push(cached);
+  }
+
+  // Пытаемся получить живые эндпоинты с GitHub raw с анти-кешем
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/Dellzzyy/vk-school-mediation/main/endpoint.json?t=${Date.now()}`, {
+      cache: 'no-store'
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data) {
+        if (Array.isArray(data.urls)) {
+          for (const u of data.urls) {
+            const clean = (u || '').replace(/\/+$/, '');
+            if (clean && !candidates.includes(clean)) candidates.push(clean);
+          }
+        }
+        if (data.url) {
+          const clean = data.url.replace(/\/+$/, '');
+          if (clean && !candidates.includes(clean)) candidates.push(clean);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Could not fetch live endpoint.json:', e);
+  }
+
+  for (const ep of API_ENDPOINTS) {
+    const clean = ep.replace(/\/+$/, '');
+    if (clean && !candidates.includes(clean)) candidates.push(clean);
+  }
+
+  return candidates.length ? candidates : [''];
+}
+
+async function apiRequest(endpoint, payload) {
+  const candidates = await resolveApiCandidates();
   let lastError = null;
 
   for (const base of candidates) {
@@ -57,7 +98,11 @@ async function apiRequest(endpoint, payload) {
         continue;
       }
 
-      return await res.json();
+      const json = await res.json();
+      if (base) {
+        try { localStorage.setItem('mediator_api_active', base); } catch (e) {}
+      }
+      return json;
     } catch (e) {
       console.warn(`Request failed to ${base}${endpoint}:`, e);
       lastError = e;
