@@ -3,6 +3,9 @@ name: Deploy to VK Mini Apps Hosting
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'endpoint.json'
+      - '**.md'
   workflow_dispatch:
 
 jobs:
