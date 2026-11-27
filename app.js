@@ -7,14 +7,8 @@ const tg = window.Telegram?.WebApp;
 const isVK = typeof vkBridge !== 'undefined' || window.location.search.includes('vk_');
 
 // Конфигурация API Backend (прямой чистый HTTPS туннель к серверу медиации)
-// Конфигурация API Backend (живой российский туннель ForTunnels -> GigaChat-2)
-const ENDPOINT_SOURCES = [
-  () => `https://raw.githubusercontent.com/Dellzzyy/vk-school-mediation/main/endpoint.json?t=${Date.now()}`,
-  () => `https://cdn.jsdelivr.net/gh/Dellzzyy/vk-school-mediation@main/endpoint.json?t=${Date.now()}`,
-  () => `./endpoint.json?t=${Date.now()}`
-];
-
-async function fetchJsonWithTimeout(url, timeoutMs = 4000) {
+// Конфигурация API Backend (живой российский туннель ForTunnels -> GigaChat-3-Ultra)
+async function fetchJsonWithTimeout(url, timeoutMs = 4500) {
   const controller = new AbortController();
   const tId = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -26,6 +20,28 @@ async function fetchJsonWithTimeout(url, timeoutMs = 4000) {
   } finally {
     clearTimeout(tId);
   }
+}
+
+async function fetchEndpointFromGithubApi() {
+  // GitHub Contents API возвращает свежий файл без 5-минутного Fastly-кэша (Simple CORS GET, без preflight)
+  const data = await fetchJsonWithTimeout(
+    `https://api.github.com/repos/Dellzzyy/vk-school-mediation/contents/endpoint.json?t=${Date.now()}`,
+    4500
+  );
+  if (!data || !data.content) return null;
+  try {
+    const decoded = atob(data.content.replace(/\s+/g, ''));
+    return JSON.parse(decoded);
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchEndpointFromRawGithub() {
+  return await fetchJsonWithTimeout(
+    `https://raw.githubusercontent.com/Dellzzyy/vk-school-mediation/main/endpoint.json?t=${Date.now()}`,
+    4500
+  );
 }
 
 async function resolveApiCandidates() {
@@ -50,17 +66,26 @@ async function resolveApiCandidates() {
     addCandidate(overrideUrl);
   }
 
-  // 2. Свежий endpoint.json с GitHub / jsDelivr / локального хостинга (параллельно, приоритетнее старого кэша!)
-  const results = await Promise.all(ENDPOINT_SOURCES.map(fn => fetchJsonWithTimeout(fn(), 4000)));
-  for (const data of results) {
-    if (!data) continue;
+  // 2. Свежий endpoint.json из GitHub API (zero-cache) + Raw GitHub (параллельно, сортируем по updated_at!)
+  const fetched = (await Promise.all([
+    fetchEndpointFromGithubApi(),
+    fetchEndpointFromRawGithub()
+  ])).filter(Boolean);
+
+  fetched.sort((a, b) => {
+    const ta = Date.parse(a.updated_at || '') || 0;
+    const tb = Date.parse(b.updated_at || '') || 0;
+    return tb - ta; // самый свежий — первым
+  });
+
+  for (const data of fetched) {
     if (data.url) addCandidate(data.url);
     if (Array.isArray(data.urls)) {
       for (const u of data.urls) addCandidate(u);
     }
   }
 
-  // 3. Кэш из localStorage — только как запасной, если свежий endpoint.json не ответил
+  // 3. Кэш из localStorage — только как запасной
   try {
     const cached = localStorage.getItem('mediator_api_active');
     if (cached) addCandidate(cached);
@@ -72,12 +97,12 @@ async function resolveApiCandidates() {
 async function checkBackendHealth(base) {
   const url = base ? `${base}/api/health` : '/api/health';
   const controller = new AbortController();
-  const tId = setTimeout(() => controller.abort(), 4500);
+  const tId = setTimeout(() => controller.abort(), 5000);
   try {
+    // Simple CORS GET (без кастомных заголовков -> без лишнего OPTIONS preflight!)
     const res = await fetch(url, {
       method: 'GET',
       cache: 'no-store',
-      headers: { 'bypass-tunnel-reminder': 'true' },
       signal: controller.signal
     });
     if (!res.ok) return false;
@@ -94,7 +119,7 @@ async function apiRequest(endpoint, payload) {
   const candidates = await resolveApiCandidates();
   let lastError = null;
 
-  // Сначала проверяем, какой бэкенд реально жив (быстрый health-check <= 4.5 сек)
+  // Сначала проверяем, какой бэкенд реально жив (быстрый health-check <= 5 сек)
   const liveCandidates = [];
   for (const base of candidates) {
     if (base === '' && window.location.protocol === 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
@@ -107,7 +132,7 @@ async function apiRequest(endpoint, payload) {
     }
   }
 
-  // Если health-check не нашёл живого, всё равно попробуем напрямую первого кандидата (на случай кэша)
+  // Если health-check не нашёл живого, пробуем кандидатов напрямую на случай кратковременного лага
   const targets = liveCandidates.length ? liveCandidates : candidates;
 
   for (const base of targets) {
@@ -117,21 +142,20 @@ async function apiRequest(endpoint, payload) {
     try {
       const fullUrl = base ? `${base}${endpoint}` : endpoint;
       const controller = new AbortController();
-      // Полноценный таймаут 45 секунд для генерации развернутого ответа живой нейросетью GigaChat-2
+      // Полноценный таймаут 45 секунд для генерации развернутого ответа живой нейросетью GigaChat-3-Ultra
       const timer = setTimeout(() => controller.abort(), 45000);
 
       const res = await fetch(fullUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'bypass-tunnel-reminder': 'true'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload),
         signal: controller.signal
       });
       clearTimeout(timer);
 
-      if ([502, 503, 504].includes(res.status)) {
+      if ([404, 502, 503, 504].includes(res.status)) {
         lastError = new Error(`HTTP ${res.status}`);
         continue;
       }
